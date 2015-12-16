@@ -240,6 +240,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Initialization\IndexEventInitialization.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
@@ -248,7 +249,6 @@
     <None Include="web.config.install.xdt" />
   </ItemGroup>
   <ItemGroup>
-    <Folder Include="Initialization\" />
     <Folder Include="Jobs\" />
     <Folder Include="Models\" />
     <Folder Include="Sannsyn\Scripts\" />
