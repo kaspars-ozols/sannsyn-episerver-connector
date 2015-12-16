@@ -1,0 +1,26 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<package xmlns="http://schemas.microsoft.com/packaging/2010/07/nuspec.xsd">
+    <metadata>
+        <id>Sannsyn.Episerver.Commerce</id>
+        <version>$version$</version>
+        <owners>Sannsyn AS</owners>
+        <authors>Sannsyn</authors>
+        <projectUrl>https://github.com/sannsyn/episerver-commerce</projectUrl>
+        <requireLicenseAcceptance>false</requireLicenseAcceptance>
+        <description>Integration between Sannsyn Recommender and Episerver Commerce</description>
+        <summary></summary>
+
+        <dependencies>
+            <dependency id="EPiServer.Commerce.Core" version="[9.0, 10.0)"  />
+        </dependencies>
+    </metadata>
+    <files>
+        <file src="sannsyn\**\*.*" target="content\sannsyn\" />
+        <!-- Configuration -->
+        <file src="web.config.install.xdt"
+              target="content" />
+
+        <file src="bin\$configuration$\Sannsyn.Episerver.Commerce.dll"
+              target="lib\net45\" />
+    </files>
+</package>
