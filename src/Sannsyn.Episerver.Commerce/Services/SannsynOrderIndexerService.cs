@@ -37,7 +37,7 @@ namespace Sannsyn.Episerver.Commerce.Services
             }
 
             SannsynModel sannsynModel = new SannsynModel();
-            sannsynModel.Service = "Episerver";
+            sannsynModel.Service = "epicphoto";
             sannsynModel.Updates = sannsynObjects;
             await SendToSannsyn(sannsynModel);
 
@@ -68,6 +68,7 @@ namespace Sannsyn.Episerver.Commerce.Services
             SannsynObjectModel model = new SannsynObjectModel();
             model.Customer = customerId.ToString();
             model.Tags = GetCatalogNodesForVariation(lineItem.Code);
+            model.Tags.Add("purchased");
             model.EntityIDs = new List<string> {lineItem.Code};
             model.Time = ConvertToUnixTimeStamp(lineItem.Modified);
             model.Boost = (float) 0.0;
