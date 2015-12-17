@@ -29,6 +29,24 @@ namespace Sannsyn.Episerver.Commerce.Extensions
             }
             return names;
         }
+        public static List<string> GetParentCategoryCodes(this CatalogContentBase productContent, string language)
+        {
+            var parentCategories = productContent.GetProductCategories(language);
+            List<string> names = new List<string>();
+            foreach (var category in parentCategories)
+            {
+                NodeContent node = category as NodeContent;
+                if(node != null)
+                {
+                    string code = node.Code;
+                    if(names.Contains(code) == false)
+                    {
+                        names.Add(code);
+                    }
+                }
+            }
+            return names;
+        }
 
         public static List<CatalogContentBase> GetProductCategories(this CatalogContentBase productContent, string language)
         {
