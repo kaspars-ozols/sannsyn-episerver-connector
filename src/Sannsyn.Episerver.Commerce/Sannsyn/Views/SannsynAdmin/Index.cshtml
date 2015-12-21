@@ -1,7 +1,7 @@
 ﻿@inherits System.Web.Mvc.WebViewPage
 @*@model Sannsyn.Episerver.Commerce.Models.ViewModels.SannsynAdminViewModel*@
 @{
-
+    // Sannsyn.Episerver.Commerce.Models.ViewModels.SannsynAdminViewModel myModel = (Sannsyn.Episerver.Commerce.Models.ViewModels.SannsynAdminViewModel) Model;
     Layout = "../_SannsynLayout.cshtml";
 }
 
@@ -20,6 +20,6 @@
         </span>
     </div>
     <div>
-        @*@Model.StatusMessage*@
+        @myModel.StatusMessage
     </div>
 </div>

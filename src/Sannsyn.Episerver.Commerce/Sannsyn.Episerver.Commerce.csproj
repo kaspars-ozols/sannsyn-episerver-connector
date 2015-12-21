@@ -250,7 +250,8 @@
   <ItemGroup>
     <Compile Include="Admin\NewsLetterMenuProvider.cs" />
     <Compile Include="Admin\SannsynAdminController.cs" />
-    <Compile Include="ClientScripts\SannsynResourceRegister.cs" />
+    <Compile Include="ClientScriptRegistration\SannsynResourceRegister.cs" />
+    <Compile Include="Configuration\SannsynConfiguration.cs" />
     <Compile Include="Extensions\CommerceContentExtensions.cs" />
     <Compile Include="Initialization\IndexEventInitialization.cs" />
     <Compile Include="Models\SannsynModel.cs" />

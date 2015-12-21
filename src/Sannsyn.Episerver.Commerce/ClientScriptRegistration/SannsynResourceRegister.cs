@@ -1,19 +1,15 @@
-﻿using EPiServer.Framework.Web.Resources;
-using EPiServer.Web;
-using System;
+﻿using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using EPiServer.Core;
 using System.Web;
-using EPiServer.Web.Routing;
-using EPiServer.ServiceLocation;
 using EPiServer.Commerce.Catalog.ContentTypes;
-using Sannsyn.Episerver.Commerce.Extensions;
+using EPiServer.Framework.Web.Resources;
+using EPiServer.ServiceLocation;
+using EPiServer.Web.Routing;
 using Mediachase.Commerce.Security;
+using Sannsyn.Episerver.Commerce.Configuration;
+using Sannsyn.Episerver.Commerce.Extensions;
 
-namespace Sannsyn.Episerver.Commerce.ClientScripts
+namespace Sannsyn.Episerver.Commerce.ClientScriptRegistration
 {
     [ClientResourceRegister]
     public class SannsynResourceRegister : IClientResourceRegister
@@ -40,8 +36,12 @@ namespace Sannsyn.Episerver.Commerce.ClientScripts
 
         private string GenerateClickUrl(Guid userId, string productCode, List<string> parentCategories)
         {
-            //http://episerver.sannsyn.com/jsrecapi/1.0/tupleupdate/epicphoto/admin/canon-5d-m3/click/photo/catclick/dslr/catclick
-            string serviceUrl = "http://episerver.sannsyn.com/jsrecapi/1.0/tupleupdate/epicphoto";
+            SannsynConfiguration config =
+                ServiceLocator.Current.GetInstance<SannsynConfiguration>();
+
+            // http://episerver.sannsyn.com/jsrecapi/1.0/tupleupdate/epicphoto/admin/canon-5d-m3/click/photo/catclick/dslr/catclick
+
+            string serviceUrl = config.ServiceUrl.ToString() + "jsrecapi/1.0/tupleupdate/" + config.Service;
             string clickUrl = string.Format("{0}/{1}/{2}/click", serviceUrl, userId, productCode);
             foreach (string category in parentCategories)
             {

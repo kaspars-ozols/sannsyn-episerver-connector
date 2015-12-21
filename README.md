@@ -1,2 +1,2 @@
-# sannsyn-episerver-connector
+# Sannsyn Episerver Commerce Connector
 Sannsyn to Episerver Commerce Connector

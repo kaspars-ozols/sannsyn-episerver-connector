@@ -18,6 +18,7 @@ using Mediachase.Commerce.Catalog.Dto;
 using Mediachase.Commerce.Markets;
 using Mediachase.Commerce.Orders;
 using Newtonsoft.Json;
+using Sannsyn.Episerver.Commerce.Configuration;
 using Sannsyn.Episerver.Commerce.Models;
 using Sannsyn.Episerver.Commerce.Extensions;
 
@@ -27,19 +28,19 @@ namespace Sannsyn.Episerver.Commerce.Services
     public class SannsynOrderIndexerService : ISannsynOrderIndexerService
     {
         private readonly ILogger _log;
+        private readonly SannsynConfiguration _configuration;
         private bool _logSendData = false; 
         readonly ReferenceConverter referenceConverter = ServiceLocator.Current.GetInstance<ReferenceConverter>();
         readonly IContentLoader contentLoader = ServiceLocator.Current.GetInstance<IContentLoader>();
 
-        public SannsynOrderIndexerService(global::EPiServer.Logging.ILogger log)
+        public SannsynOrderIndexerService(global::EPiServer.Logging.ILogger log, SannsynConfiguration configuration)
         {
             _log = log;
-            var sendDataFlag = ConfigurationManager.AppSettings["Sannsyn:LogSendData"];
-            bool.TryParse(sendDataFlag, out _logSendData);
-
+            _configuration = configuration;
+            _logSendData = _configuration.LogSendData;
         }
 
-        public async void AddLineItemsToSannsyn(OrderGroup orderGroup)
+        public void AddLineItemsToSannsyn(OrderGroup orderGroup)
         {
             LineItemCollection lineItems = orderGroup.OrderForms.First().LineItems;
 
@@ -50,29 +51,27 @@ namespace Sannsyn.Episerver.Commerce.Services
             }
 
             SannsynModel sannsynModel = new SannsynModel();
-            sannsynModel.Service = "epicphoto";
+            sannsynModel.Service = _configuration.Service;
             sannsynModel.Updates = sannsynObjects;
-            await SendToSannsyn(sannsynModel);
-
-
+            SendToSannsyn(sannsynModel);
         }
 
-        private async Task<HttpResponseMessage> SendToSannsyn(SannsynModel sannsynModel)
+        private HttpResponseMessage SendToSannsyn(SannsynModel sannsynModel)
         {
-            var serviceUrl = "http://episerver.sannsyn.com/recapi/1.0/update";
-            var username = "episerver";
-            var password = "aDmnGspinache";
+            Uri serviceUrl = new Uri(_configuration.ServiceUrl, "/recapi/1.0/update");
+            var username = _configuration.Username;
+            var password = _configuration.Password;
 
             var jsonData = JsonConvert.SerializeObject(sannsynModel);
 
             HttpClient client = new HttpClient();
-            client.BaseAddress = new Uri(serviceUrl);
+            client.BaseAddress = serviceUrl;
             byte[] cred = UTF8Encoding.UTF8.GetBytes(username+":"+password);
             client.DefaultRequestHeaders.Authorization = new System.Net.Http.Headers.AuthenticationHeaderValue("Basic", Convert.ToBase64String(cred));
             //client.DefaultRequestHeaders.Accept.Add(new System.Net.Http.Headers.MediaTypeWithQualityHeaderValue("application/json"));
 
             HttpContent content = new StringContent(jsonData);
-            HttpResponseMessage response =  await client.PutAsync(serviceUrl, content);
+            HttpResponseMessage response =  client.PutAsync(serviceUrl, content).Result;
             _log.Debug("Sent to Sannsyn. Result: {0}", response.StatusCode);
             if(response.IsSuccessStatusCode == false)
             {
@@ -92,8 +91,7 @@ namespace Sannsyn.Episerver.Commerce.Services
         {
             SannsynObjectModel model = new SannsynObjectModel();
             model.Customer = customerId.ToString();
-            model.Tags = GetCatalogNodesForVariation(lineItem.Code);
-            model.Tags.Add("purchased");
+            model.Tags = new List<string> {"buy"};
             model.EntityIDs = new List<string> {lineItem.Code};
             model.Time = ConvertToUnixTimeStamp(lineItem.Modified);
             model.Boost = (float) 0.0;
