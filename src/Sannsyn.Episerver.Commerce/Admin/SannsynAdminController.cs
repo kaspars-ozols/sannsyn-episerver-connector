@@ -39,7 +39,7 @@ namespace Sannsyn.Episerver.Commerce.Admin
                 sannsynContentIndexer.AddLineItemsToSannsyn(order);
             }
             viewModel.StatusMessage = string.Format("Sent {0} orders for to sannsyn",allOrders.Count);
-            return View(string.Format("{0}{1}/Views/SannsynAdmin/Index.cshtml", Paths.ProtectedRootPath, "Sannsyn"));
+            return View(string.Format("{0}{1}/Views/SannsynAdmin/Index.cshtml", Paths.ProtectedRootPath, "Sannsyn"),viewModel);
         }
 
         public ActionResult StopAndStartSannsynService()
