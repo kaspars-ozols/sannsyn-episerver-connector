@@ -60,7 +60,8 @@ namespace Sannsyn.Episerver.Commerce.Services
         private HttpResponseMessage SendToSannsyn(SannsynUpdateModel sannsynModel)
         {
             var jsonData = JsonConvert.SerializeObject(sannsynModel);
-            Uri serviceUrl = _backendService.GetServiceMethodUri("update");
+            // This method does not require the service name
+            Uri serviceUrl = _backendService.GetServiceMethodUri("update", null, null);
             HttpClient client = _backendService.GetConfiguredClient();
 
             HttpContent content = new StringContent(jsonData);
