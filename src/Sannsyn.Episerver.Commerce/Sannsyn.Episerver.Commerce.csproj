@@ -252,6 +252,7 @@
     <Compile Include="Admin\SannsynAdminController.cs" />
     <Compile Include="Admin\SannsynOverviewController.cs" />
     <Compile Include="Backend\BackendService.cs" />
+    <Compile Include="Models\SannsynDdsModel.cs" />
     <Compile Include="Models\SannsynRecommendModel.cs" />
     <Compile Include="Models\ViewModels\SannsynOverviewViewModel.cs" />
     <Compile Include="Models\ViewModels\StatusObject.cs" />
