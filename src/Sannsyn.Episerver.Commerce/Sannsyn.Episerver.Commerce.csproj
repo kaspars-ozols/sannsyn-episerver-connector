@@ -251,9 +251,11 @@
     <Compile Include="Admin\NewsLetterMenuProvider.cs" />
     <Compile Include="Admin\SannsynAdminController.cs" />
     <Compile Include="Admin\SannsynOverviewController.cs" />
+    <Compile Include="Models\ViewModels\StatusObject.cs" />
     <Compile Include="ClientScriptRegistration\SannsynResourceRegister.cs" />
     <Compile Include="Configuration\SannsynConfiguration.cs" />
     <Compile Include="Extensions\CommerceContentExtensions.cs" />
+    <Compile Include="Extensions\DateTimeExtensions.cs" />
     <Compile Include="Initialization\IndexEventInitialization.cs" />
     <Compile Include="Models\SannsynModel.cs" />
     <Compile Include="Models\SannsynObjectModel.cs" />
@@ -271,6 +273,7 @@
     <Content Include="Sannsyn\module.config">
       <SubType>Designer</SubType>
     </Content>
+    <Content Include="Sannsyn\Styles\SannsynAdminStyle.css" />
     <Content Include="Sannsyn\Views\_SannsynLayout.cshtml" />
     <Content Include="Sannsyn\Views\SannsynAdmin\Index.cshtml" />
     <Content Include="Sannsyn\Views\web.config" />

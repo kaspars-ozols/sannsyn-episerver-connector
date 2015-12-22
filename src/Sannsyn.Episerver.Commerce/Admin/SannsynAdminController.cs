@@ -18,7 +18,7 @@ namespace Sannsyn.Episerver.Commerce.Admin
     {
 
 
-        [MenuItem("/global/sannsyn/admin", Text = "Admin")]
+        [MenuItem("/global/sannsyn/admin", Text = "Admin", SortIndex = 20)]
         public ActionResult Index()
         {
             SannsynAdminViewModel viewModel = new SannsynAdminViewModel();

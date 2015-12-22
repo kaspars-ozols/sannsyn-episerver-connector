@@ -19,7 +19,7 @@ namespace Sannsyn.Episerver.Commerce.Models
         public List<string> EntityIDs { get; set; }
 
         [JsonProperty(PropertyName = "time")]
-        public long Time { get; set; }
+        public double Time { get; set; }
 
         [JsonProperty(PropertyName = "boost")]
         public float Boost  { get; set; }

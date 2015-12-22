@@ -93,17 +93,10 @@ namespace Sannsyn.Episerver.Commerce.Services
             model.Customer = customerId.ToString();
             model.Tags = new List<string> {"buy"};
             model.EntityIDs = new List<string> {lineItem.Code};
-            model.Time = ConvertToUnixTimeStamp(lineItem.Modified);
+            model.Time = lineItem.Modified.ToJavaTimeStamp();
             model.Boost = (float) 0.0;
             model.Number = (int) lineItem.Quantity;
             return model;
-        }
-
-        private long ConvertToUnixTimeStamp(DateTime modified)
-        {
-            DateTime origin = new DateTime(1970, 1, 1, 0, 0, 0, 0);
-            TimeSpan diff = modified.ToUniversalTime() - origin;
-            return (long) Math.Floor(diff.TotalSeconds);
         }
 
         private List<string> GetCatalogNodesForVariation(string code)
