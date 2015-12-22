@@ -7,11 +7,11 @@ using Newtonsoft.Json;
 
 namespace Sannsyn.Episerver.Commerce.Models
 {
-    public class SannsynModel
+    public class SannsynUpdateModel
     {
         [JsonProperty(PropertyName = "service")]
         public string Service { get; set; }
         [JsonProperty(PropertyName = "updates")]
-        public List<SannsynObjectModel> Updates { get; set; }
+        public List<SannsynUpdateEntityModel> Updates { get; set; }
     }
 }

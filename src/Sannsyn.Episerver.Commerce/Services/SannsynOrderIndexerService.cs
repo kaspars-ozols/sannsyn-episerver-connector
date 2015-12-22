@@ -18,6 +18,7 @@ using Mediachase.Commerce.Catalog.Dto;
 using Mediachase.Commerce.Markets;
 using Mediachase.Commerce.Orders;
 using Newtonsoft.Json;
+using Sannsyn.Episerver.Commerce.Backend;
 using Sannsyn.Episerver.Commerce.Configuration;
 using Sannsyn.Episerver.Commerce.Models;
 using Sannsyn.Episerver.Commerce.Extensions;
@@ -29,14 +30,14 @@ namespace Sannsyn.Episerver.Commerce.Services
     {
         private readonly ILogger _log;
         private readonly SannsynConfiguration _configuration;
+        private readonly BackendService _backendService;
         private bool _logSendData = false; 
-        readonly ReferenceConverter referenceConverter = ServiceLocator.Current.GetInstance<ReferenceConverter>();
-        readonly IContentLoader contentLoader = ServiceLocator.Current.GetInstance<IContentLoader>();
 
-        public SannsynOrderIndexerService(global::EPiServer.Logging.ILogger log, SannsynConfiguration configuration)
+        public SannsynOrderIndexerService(global::EPiServer.Logging.ILogger log, SannsynConfiguration configuration, BackendService backendService)
         {
             _log = log;
             _configuration = configuration;
+            _backendService = backendService;
             _logSendData = _configuration.LogSendData;
         }
 
@@ -44,31 +45,23 @@ namespace Sannsyn.Episerver.Commerce.Services
         {
             LineItemCollection lineItems = orderGroup.OrderForms.First().LineItems;
 
-            List<SannsynObjectModel> sannsynObjects = new List<SannsynObjectModel>();
+            List<SannsynUpdateEntityModel> sannsynObjects = new List<SannsynUpdateEntityModel>();
             foreach (LineItem lineItem in lineItems)
             {
                 sannsynObjects.Add(CreateSannsynObject(lineItem, orderGroup.CustomerId,orderGroup.Modified));
             }
 
-            SannsynModel sannsynModel = new SannsynModel();
+            SannsynUpdateModel sannsynModel = new SannsynUpdateModel();
             sannsynModel.Service = _configuration.Service;
             sannsynModel.Updates = sannsynObjects;
             SendToSannsyn(sannsynModel);
         }
 
-        private HttpResponseMessage SendToSannsyn(SannsynModel sannsynModel)
+        private HttpResponseMessage SendToSannsyn(SannsynUpdateModel sannsynModel)
         {
-            Uri serviceUrl = new Uri(_configuration.ServiceUrl, "/recapi/1.0/update");
-            var username = _configuration.Username;
-            var password = _configuration.Password;
-
             var jsonData = JsonConvert.SerializeObject(sannsynModel);
-
-            HttpClient client = new HttpClient();
-            client.BaseAddress = serviceUrl;
-            byte[] cred = UTF8Encoding.UTF8.GetBytes(username+":"+password);
-            client.DefaultRequestHeaders.Authorization = new System.Net.Http.Headers.AuthenticationHeaderValue("Basic", Convert.ToBase64String(cred));
-            //client.DefaultRequestHeaders.Accept.Add(new System.Net.Http.Headers.MediaTypeWithQualityHeaderValue("application/json"));
+            Uri serviceUrl = _backendService.GetServiceMethodUri("update");
+            HttpClient client = _backendService.GetConfiguredClient();
 
             HttpContent content = new StringContent(jsonData);
             HttpResponseMessage response =  client.PutAsync(serviceUrl, content).Result;
@@ -87,9 +80,9 @@ namespace Sannsyn.Episerver.Commerce.Services
             return response;
         }
 
-        private SannsynObjectModel CreateSannsynObject(LineItem lineItem, Guid customerId, DateTime modified)
+        private SannsynUpdateEntityModel CreateSannsynObject(LineItem lineItem, Guid customerId, DateTime modified)
         {
-            SannsynObjectModel model = new SannsynObjectModel();
+            SannsynUpdateEntityModel model = new SannsynUpdateEntityModel();
             model.Customer = customerId.ToString();
             model.Tags = new List<string> {"buy"};
             model.EntityIDs = new List<string> {lineItem.Code};
@@ -99,15 +92,5 @@ namespace Sannsyn.Episerver.Commerce.Services
             return model;
         }
 
-        private List<string> GetCatalogNodesForVariation(string code)
-        {           
-            ContentReference cf = referenceConverter.GetContentLink(code);
-            CatalogContentBase entry = contentLoader.Get<CatalogContentBase>(cf);
-            if (entry != null)
-            {
-                return entry.GetParentCategoryCodes(entry.Language.Name);
-            }
-            return new List<string>();
-        }
     }
 }
