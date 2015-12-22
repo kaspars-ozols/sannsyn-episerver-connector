@@ -5,18 +5,14 @@ using Mediachase.Commerce.Orders;
 using Mediachase.Commerce.Orders.Search;
 using Sannsyn.Episerver.Commerce.Models.ViewModels;
 using Sannsyn.Episerver.Commerce.Services;
-using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using System.Web.Http;
 using System.Web.Mvc;
 
 namespace Sannsyn.Episerver.Commerce.Admin
 {
-  
-  
+
+
     //[System.Web.Mvc.Authorize(Roles = "Administrators, WebAdmins, WebEditors")]
     public class SannsynAdminController : Controller
     {
