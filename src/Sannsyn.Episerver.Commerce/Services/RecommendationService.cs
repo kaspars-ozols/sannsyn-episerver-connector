@@ -13,8 +13,8 @@ using Sannsyn.Episerver.Commerce.Models.ViewModels;
 
 namespace Sannsyn.Episerver.Commerce.Services
 {
-    [ServiceConfiguration(typeof(RecommendationService))]
-    public class RecommendationService
+    [ServiceConfiguration(typeof(IRecommendationService))]
+    public class RecommendationService : IRecommendationService
     {
         private readonly BackendService _backendService;
 
@@ -48,7 +48,11 @@ namespace Sannsyn.Episerver.Commerce.Services
         /// <returns></returns>
         public IEnumerable<string> GetRecommendationsForProduct(string productCode, int maxCount = 10)
         {
-            return null;
+            Uri serviceUrl = _backendService.GetServiceMethodUri("recommend", "MostPopularClickItems/" + productCode);
+            HttpClient client = _backendService.GetConfiguredClient();
+            var model = _backendService.GetResult<SannsynRecommendModel>(serviceUrl, client);
+
+            return model.Result;
         }
 
         /// <summary>

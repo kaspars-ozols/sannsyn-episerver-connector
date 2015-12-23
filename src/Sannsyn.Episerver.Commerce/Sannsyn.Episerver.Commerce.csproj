@@ -267,6 +267,7 @@
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Services\CustomerService.cs" />
     <Compile Include="Services\ICurrentCustomerService.cs" />
+    <Compile Include="Services\IRecommendationService.cs" />
     <Compile Include="Services\ISannsynOrderIndexerService.cs" />
     <Compile Include="Services\RecommendationService.cs" />
     <Compile Include="Services\SannsynOrderIndexerService.cs" />
