@@ -10,5 +10,6 @@ namespace Sannsyn.Episerver.Commerce.Models.ViewModels
     {
         public ServiceStatusViewModel ServiceStatus { get; set; }
         public IEnumerable<string> CurrentUserRecommendations { get; set; }
+        public string CurrentUserId { get; set; }
     }
 }

@@ -38,6 +38,7 @@ namespace Sannsyn.Episerver.Commerce.Admin
             model.ServiceStatus = statusmodel;
 
             var userId = _currentCustomerService.GetCurrentUserId();
+            model.CurrentUserId = userId;
             model.CurrentUserRecommendations = _recommendationService.GetRecommendationsForCustomer(userId);
 
             return View(string.Format("{0}{1}/Views/SannsynOverview/Index.cshtml", Paths.ProtectedRootPath, "Sannsyn"), model);

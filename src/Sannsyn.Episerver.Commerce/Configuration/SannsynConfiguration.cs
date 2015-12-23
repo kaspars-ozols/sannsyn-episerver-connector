@@ -15,7 +15,8 @@ namespace Sannsyn.Episerver.Commerce.Configuration
     {
         private readonly DbConnectionStringBuilder _builder;
         private Uri _serviceUrl = null;
-        private bool _logSendData;
+        private bool _logSendData = false;
+        private bool _moduleDisabled = false;
 
         public SannsynConfiguration()
         {
@@ -42,6 +43,10 @@ namespace Sannsyn.Episerver.Commerce.Configuration
             var sendDataFlag = ConfigurationManager.AppSettings["Sannsyn:LogSendData"];
             bool.TryParse(sendDataFlag, out _logSendData);
 
+            var moduleDisabled = ConfigurationManager.AppSettings["Sannsyn:DisableModule"];
+            bool.TryParse(moduleDisabled, out _moduleDisabled);
+
+
         }
 
         public bool LogSendData
@@ -56,6 +61,10 @@ namespace Sannsyn.Episerver.Commerce.Configuration
         public string Service { get { return _builder["Service"].ToString(); } }
         public string Username { get { return _builder["User Name"].ToString(); } }
         public string Password { get { return _builder["Password"].ToString(); } }
-
+        public bool ModuleEnabled
+        {
+            get { return !_moduleDisabled; }
+            private set { _moduleDisabled = !value; }
+        }
     }
 }
