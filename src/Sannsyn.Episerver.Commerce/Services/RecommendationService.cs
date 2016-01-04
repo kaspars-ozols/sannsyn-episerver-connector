@@ -1,15 +1,9 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
 using System.Net.Http;
-using System.Text;
-using System.Threading.Tasks;
 using EPiServer.ServiceLocation;
-using Newtonsoft.Json;
 using Sannsyn.Episerver.Commerce.Backend;
-using Sannsyn.Episerver.Commerce.Configuration;
 using Sannsyn.Episerver.Commerce.Models;
-using Sannsyn.Episerver.Commerce.Models.ViewModels;
 
 namespace Sannsyn.Episerver.Commerce.Services
 {
@@ -26,9 +20,9 @@ namespace Sannsyn.Episerver.Commerce.Services
         /// <summary>
         /// Get recommended products for a customer
         /// </summary>
-        /// <param name="customerId"></param>
-        /// <param name="maxCount"></param>
-        /// <returns></returns>
+        /// <param name="customerId">Customer id to get Recommendations for</param>
+        /// <param name="maxCount">Number of recommendations to return</param>
+        /// <returns>A list of entry codes</returns>
         public IEnumerable<string> GetRecommendationsForCustomer(string customerId, int maxCount = 10)
         {
             // Uses aggregate MostPopularClickItems

@@ -1,9 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using EPiServer;
 using EPiServer.Framework;
 using EPiServer.Framework.Initialization;
 using EPiServer.Logging;
@@ -33,7 +28,7 @@ namespace Sannsyn.Episerver.Commerce.Initialization
         /// <summary>
         /// Adding lineitem entries to Sannsyn. Since OrderGroupUpdated is called often, we add last 
         /// order indexed in DDS, so we don't index duplicate orders. All code is in a try, then the order 
-        /// will be completed if error occures when calling sannsyn or DDS
+        /// will still be completed if error occures when calling sannsyn or DDS
         /// </summary>
         /// <param name="order"></param>
         /// <param name="e"></param>

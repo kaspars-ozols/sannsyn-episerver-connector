@@ -1,9 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using EPiServer.ServiceLocation;
+﻿using EPiServer.ServiceLocation;
 using Mediachase.Commerce.Security;
 
 namespace Sannsyn.Episerver.Commerce.Services
@@ -17,7 +12,6 @@ namespace Sannsyn.Episerver.Commerce.Services
         /// <returns></returns>
         public string GetCurrentUserId()
         {
-            // 
             var userId = EPiServer.Security.PrincipalInfo.CurrentPrincipal.GetContactId().ToString();
             return userId;
         }

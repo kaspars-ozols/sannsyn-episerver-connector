@@ -1,21 +1,9 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Configuration;
-using System.Globalization;
 using System.Linq;
 using System.Net.Http;
-using System.Text;
-using System.Threading.Tasks;
-using System.Web.Script.Serialization;
-using EPiServer;
-using EPiServer.Commerce.Catalog.ContentTypes;
-using EPiServer.Core;
-using EPiServer.Framework.Localization;
 using EPiServer.Logging;
 using EPiServer.ServiceLocation;
-using Mediachase.Commerce.Catalog;
-using Mediachase.Commerce.Catalog.Dto;
-using Mediachase.Commerce.Markets;
 using Mediachase.Commerce.Orders;
 using Newtonsoft.Json;
 using Sannsyn.Episerver.Commerce.Backend;
@@ -41,6 +29,10 @@ namespace Sannsyn.Episerver.Commerce.Services
             _logSendData = _configuration.LogSendData;
         }
 
+        /// <summary>
+        /// Creates a update model to Sannsyn, with a list of entry/variation codes, and service name
+        /// </summary>
+        /// <param name="orderGroup">Order to get lineitems from</param>
         public void AddLineItemsToSannsyn(OrderGroup orderGroup)
         {
             LineItemCollection lineItems = orderGroup.OrderForms.First().LineItems;
@@ -48,7 +40,7 @@ namespace Sannsyn.Episerver.Commerce.Services
             List<SannsynUpdateEntityModel> sannsynObjects = new List<SannsynUpdateEntityModel>();
             foreach (LineItem lineItem in lineItems)
             {
-                sannsynObjects.Add(CreateSannsynObject(lineItem, orderGroup.CustomerId,orderGroup.Modified));
+                sannsynObjects.Add(CreateSannsynObject(lineItem, orderGroup.CustomerId));
             }
 
             SannsynUpdateModel sannsynModel = new SannsynUpdateModel();
@@ -57,6 +49,11 @@ namespace Sannsyn.Episerver.Commerce.Services
             SendToSannsyn(sannsynModel);
         }
 
+        /// <summary>
+        /// Sending data to Sannsyn
+        /// </summary>
+        /// <param name="sannsynModel">Model with entry codes</param>
+        /// <returns>A HttpResponseMessage with result from the put request to Sannsyn</returns>
         private HttpResponseMessage SendToSannsyn(SannsynUpdateModel sannsynModel)
         {
             var jsonData = JsonConvert.SerializeObject(sannsynModel);
@@ -81,7 +78,13 @@ namespace Sannsyn.Episerver.Commerce.Services
             return response;
         }
 
-        private SannsynUpdateEntityModel CreateSannsynObject(LineItem lineItem, Guid customerId, DateTime modified)
+        /// <summary>
+        /// Creates a SannsynUpdateEntityModel with customerId, buy tag and list of entries
+        /// </summary>
+        /// <param name="lineItem">LineItem with entry</param>
+        /// <param name="customerId">Customer buying</param>
+        /// <returns></returns>
+        private SannsynUpdateEntityModel CreateSannsynObject(LineItem lineItem, Guid customerId)
         {
             SannsynUpdateEntityModel model = new SannsynUpdateEntityModel();
             model.Customer = customerId.ToString();
