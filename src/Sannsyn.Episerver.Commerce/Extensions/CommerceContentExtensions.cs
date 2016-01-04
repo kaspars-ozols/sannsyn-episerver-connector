@@ -1,9 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using AuthorizeNet.Util;
 using EPiServer;
 using EPiServer.Commerce.Catalog.ContentTypes;
 using EPiServer.Commerce.Catalog.Linking;
@@ -19,16 +16,12 @@ namespace Sannsyn.Episerver.Commerce.Extensions
         static readonly IContentLoader contentLoader = ServiceLocator.Current.GetInstance<IContentLoader>();
         static readonly ReferenceConverter referenceConverter = ServiceLocator.Current.GetInstance<ReferenceConverter>();
 
-        public static List<string> GetParentCategoryNames(this CatalogContentBase productContent, string language)
-        {
-            var parentCategories = productContent.GetProductCategories(language);
-            List<string> names = new List<string>();
-            foreach (var category in parentCategories)
-            {
-                names.Add(category.Name);
-            }
-            return names;
-        }
+        /// <summary>
+        /// Creates a list of parent category names for a product
+        /// </summary>
+        /// <param name="productContent">Product to get parent category names from</param>
+        /// <param name="language">Current language name</param>
+        /// <returns>List of category names</returns>
         public static List<string> GetParentCategoryCodes(this CatalogContentBase productContent, string language)
         {
             var parentCategories = productContent.GetProductCategories(language);
@@ -48,6 +41,12 @@ namespace Sannsyn.Episerver.Commerce.Extensions
             return names;
         }
 
+        /// <summary>
+        /// Creates a list of Parent categories for a product
+        /// </summary>
+        /// <param name="productContent">Product to get parent categories from</param>
+        /// <param name="language">Current language name</param>
+        /// <returns>List of Categories as CatalogContentBase</returns>
         public static List<CatalogContentBase> GetProductCategories(this CatalogContentBase productContent, string language)
         {
 

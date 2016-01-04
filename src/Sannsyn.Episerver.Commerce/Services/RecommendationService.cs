@@ -37,9 +37,9 @@ namespace Sannsyn.Episerver.Commerce.Services
         /// <summary>
         /// Get recommended products for a given product
         /// </summary>
-        /// <param name="productCode"></param>
-        /// <param name="maxCount"></param>
-        /// <returns></returns>
+        /// <param name="productCode">Product code to get recommendations for</param>
+        /// <param name="maxCount">Number of recommendations to return</param>
+        /// <returns>A list of entry codes</returns>
         public IEnumerable<string> GetRecommendationsForProduct(string productCode, int maxCount = 10)
         {
             Uri serviceUrl = _backendService.GetServiceMethodUri("recommend", "MostPopularClickItems/" + productCode);

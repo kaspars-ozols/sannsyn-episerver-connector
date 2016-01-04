@@ -14,6 +14,7 @@ namespace Sannsyn.Episerver.Commerce.ClientScriptRegistration
     [ClientResourceRegister]
     public class SannsynResourceRegister : IClientResourceRegister
     {
+
         public void RegisterResources(IRequiredClientResourceList requiredResources, HttpContextBase context)
         {
             PageRouteHelper instance = ServiceLocator.Current.GetInstance<PageRouteHelper>();

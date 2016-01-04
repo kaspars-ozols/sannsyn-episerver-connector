@@ -1,8 +1,5 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using EPiServer.Data;
 using EPiServer.Data.Dynamic;
 
@@ -20,6 +17,7 @@ namespace Sannsyn.Episerver.Commerce.Models
         // Required to implement IDynamicData
         public Identity Id { get; set; }
 
+        // Last order id sent to Sannsyn
         public int LastIndexedOrderId { get; set; }
 
         public void Save()
