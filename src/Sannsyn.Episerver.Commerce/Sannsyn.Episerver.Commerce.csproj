@@ -252,6 +252,7 @@
     <Compile Include="Admin\SannsynAdminController.cs" />
     <Compile Include="Admin\SannsynOverviewController.cs" />
     <Compile Include="Backend\BackendService.cs" />
+    <Compile Include="Extensions\LineItemExtensions.cs" />
     <Compile Include="Models\SannsynDdsModel.cs" />
     <Compile Include="Models\SannsynRecommendModel.cs" />
     <Compile Include="Models\ViewModels\SannsynOverviewViewModel.cs" />
@@ -265,12 +266,16 @@
     <Compile Include="Models\SannsynUpdateEntityModel.cs" />
     <Compile Include="Models\ViewModels\SannsynAdminViewModel.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Services\ISannsynUpdateService.cs" />
+    <Compile Include="Services\SannsynCatalogIndexService.cs" />
     <Compile Include="Services\CurrentCustomerService.cs" />
+    <Compile Include="Services\ISannsynCatalogIndexService.cs" />
     <Compile Include="Services\ICurrentCustomerService.cs" />
     <Compile Include="Services\IRecommendationService.cs" />
     <Compile Include="Services\ISannsynOrderIndexerService.cs" />
     <Compile Include="Services\RecommendationService.cs" />
     <Compile Include="Services\SannsynOrderIndexerService.cs" />
+    <Compile Include="Services\SannsynUpdateService.cs" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="module.config">

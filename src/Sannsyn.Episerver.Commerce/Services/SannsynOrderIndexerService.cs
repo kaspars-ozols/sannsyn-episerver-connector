@@ -2,9 +2,11 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Net.Http;
+using EPiServer.Commerce.Catalog.ContentTypes;
 using EPiServer.Logging;
 using EPiServer.ServiceLocation;
 using Mediachase.Commerce.Orders;
+using Mediachase.Commerce.Orders.Search;
 using Newtonsoft.Json;
 using Sannsyn.Episerver.Commerce.Backend;
 using Sannsyn.Episerver.Commerce.Configuration;
@@ -18,16 +20,41 @@ namespace Sannsyn.Episerver.Commerce.Services
     {
         private readonly ILogger _log;
         private readonly SannsynConfiguration _configuration;
-        private readonly BackendService _backendService;
-        private bool _logSendData = false; 
+        private readonly ISannsynUpdateService _sannsynUpdateService;
 
-        public SannsynOrderIndexerService(global::EPiServer.Logging.ILogger log, SannsynConfiguration configuration, BackendService backendService)
+
+        public SannsynOrderIndexerService(global::EPiServer.Logging.ILogger log, 
+            SannsynConfiguration configuration,
+            ISannsynUpdateService sannsynUpdateService)
         {
             _log = log;
             _configuration = configuration;
-            _backendService = backendService;
-            _logSendData = _configuration.LogSendData;
+            _sannsynUpdateService = sannsynUpdateService;
         }
+
+        public List<PurchaseOrder> GetOrders(string sqlWhereClause, string sqlMetaWhereClause, int recordCount = int.MaxValue)
+        {
+            var orderSearchParameters = new OrderSearchParameters();
+            if (!string.IsNullOrEmpty(sqlWhereClause))
+            {
+                orderSearchParameters.SqlWhereClause = sqlWhereClause;
+            }
+
+            if (!string.IsNullOrEmpty(sqlMetaWhereClause))
+            {
+                orderSearchParameters.SqlMetaWhereClause = sqlMetaWhereClause;
+            }
+
+            var orderSearchOptions = new OrderSearchOptions();
+            orderSearchOptions.Namespace = "Mediachase.Commerce.Orders";
+            orderSearchOptions.Classes.Add("PurchaseOrder");
+            orderSearchOptions.Classes.Add("Shipment");
+            orderSearchOptions.CacheResults = false;
+            orderSearchOptions.RecordsToRetrieve = recordCount;
+
+            return OrderContext.Current.FindPurchaseOrders(orderSearchParameters, orderSearchOptions).ToList();
+        }
+
 
         /// <summary>
         /// Creates a update model to Sannsyn, with a list of entry/variation codes, and service name
@@ -46,37 +73,10 @@ namespace Sannsyn.Episerver.Commerce.Services
             SannsynUpdateModel sannsynModel = new SannsynUpdateModel();
             sannsynModel.Service = _configuration.Service;
             sannsynModel.Updates = sannsynObjects;
-            SendToSannsyn(sannsynModel);
+            _sannsynUpdateService.SendToSannsyn(sannsynModel);
         }
 
-        /// <summary>
-        /// Sending data to Sannsyn
-        /// </summary>
-        /// <param name="sannsynModel">Model with entry codes</param>
-        /// <returns>A HttpResponseMessage with result from the put request to Sannsyn</returns>
-        private HttpResponseMessage SendToSannsyn(SannsynUpdateModel sannsynModel)
-        {
-            var jsonData = JsonConvert.SerializeObject(sannsynModel);
-            // This method does not require the service name
-            Uri serviceUrl = _backendService.GetServiceMethodUri("update", null, null);
-            HttpClient client = _backendService.GetConfiguredClient();
-
-            HttpContent content = new StringContent(jsonData);
-            HttpResponseMessage response =  client.PutAsync(serviceUrl, content).Result;
-            _log.Debug("Sent to Sannsyn. Result: {0}", response.StatusCode);
-            if(response.IsSuccessStatusCode == false)
-            {
-                string resultContent = response.Content.ReadAsStringAsync().Result;
-                _log.Warning("Send to Sannsyn failed: {0}", resultContent);
-            }
-
-            if(_logSendData)
-            {
-                _log.Debug("Data: {0}", jsonData);
-            }
-
-            return response;
-        }
+       
 
         /// <summary>
         /// Creates a SannsynUpdateEntityModel with customerId, buy tag and list of entries
@@ -86,10 +86,14 @@ namespace Sannsyn.Episerver.Commerce.Services
         /// <returns></returns>
         private SannsynUpdateEntityModel CreateSannsynObject(LineItem lineItem, Guid customerId)
         {
+            var entry = lineItem.GetEntryContent<EntryContentBase>();
+            var parent = entry.GetParent();
+            string code = parent == null ? entry.Code : parent.Code;
+
             SannsynUpdateEntityModel model = new SannsynUpdateEntityModel();
             model.Customer = customerId.ToString();
             model.Tags = new List<string> {"buy"};
-            model.EntityIDs = new List<string> {lineItem.Code};
+            model.EntityIDs = new List<string> { code };
             model.Time = lineItem.Modified.ToJavaTimeStamp();
             model.Boost = (float) 0.0;
             model.Number = (int) lineItem.Quantity;

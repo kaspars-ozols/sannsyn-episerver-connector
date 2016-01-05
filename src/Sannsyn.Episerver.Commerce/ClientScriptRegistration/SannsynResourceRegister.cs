@@ -40,6 +40,7 @@ namespace Sannsyn.Episerver.Commerce.ClientScriptRegistration
             SannsynConfiguration config =
                 ServiceLocator.Current.GetInstance<SannsynConfiguration>();
 
+            //Example url:
             // http://episerver.sannsyn.com/jsrecapi/1.0/tupleupdate/epicphoto/admin/canon-5d-m3/click/photo/catclick/dslr/catclick
 
             string serviceUrl = config.ServiceUrl.ToString() + "jsrecapi/1.0/tupleupdate/" + config.Service;

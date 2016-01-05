@@ -94,5 +94,28 @@ namespace Sannsyn.Episerver.Commerce.Extensions
             }
             return parentCategories;
         }
+
+        /// <summary>
+        /// Get the parent of a catalog entry
+        /// </summary>
+        /// <param name="content"></param>
+        /// <returns></returns>
+        public static EntryContentBase GetParent(this EntryContentBase content)
+        {
+            if (content != null)
+            {
+                IEnumerable<Relation> parentRelations = linksRepository.GetRelationsByTarget(content.ContentLink);
+                if (parentRelations.Any())
+                {
+                    Relation firstRelation = parentRelations.FirstOrDefault();
+                    if (firstRelation != null)
+                    {
+                        var ParentProductContent = contentLoader.Get<EntryContentBase>(firstRelation.Source);
+                        return ParentProductContent;
+                    }
+                }
+            }
+            return null;
+        }
     }
 }

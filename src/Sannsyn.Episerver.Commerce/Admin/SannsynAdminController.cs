@@ -17,6 +17,16 @@ namespace Sannsyn.Episerver.Commerce.Admin
     public class SannsynAdminController : Controller
     {
 
+        private readonly ISannsynCatalogIndexService _sannsynCatalogIndexService;
+        private readonly ISannsynOrderIndexerService _sannsynOrderIndexerService;
+
+        public SannsynAdminController(ISannsynCatalogIndexService sannsynCatalogIndexService,
+            ISannsynOrderIndexerService sannsynOrderIndexerService)
+        {
+            _sannsynCatalogIndexService = sannsynCatalogIndexService;
+            _sannsynOrderIndexerService = sannsynOrderIndexerService;
+        }
+
 
         [MenuItem("/global/sannsyn/admin", Text = "Admin", SortIndex = 20)]
         public ActionResult Index()
@@ -28,47 +38,35 @@ namespace Sannsyn.Episerver.Commerce.Admin
         public ActionResult RunIndexingTool()
         {
             SannsynAdminViewModel viewModel = new SannsynAdminViewModel();
-            ISannsynOrderIndexerService sannsynContentIndexer = ServiceLocator.Current.GetInstance<ISannsynOrderIndexerService>();
-            List<PurchaseOrder> allOrders = GetOrders(string.Empty, string.Empty, int.MaxValue);
+            
+            List<PurchaseOrder> allOrders = _sannsynOrderIndexerService.GetOrders(string.Empty, string.Empty, int.MaxValue);
             foreach (var order in allOrders)
             {
-                sannsynContentIndexer.AddLineItemsToSannsyn(order);
+                _sannsynOrderIndexerService.AddLineItemsToSannsyn(order);
             }
-            viewModel.StatusMessage = string.Format("Sent {0} orders for to sannsyn",allOrders.Count);
+            viewModel.StatusMessage = string.Format("Sent {0} orders to sannsyn",allOrders.Count);
             return View(string.Format("{0}{1}/Views/SannsynAdmin/Index.cshtml", Paths.ProtectedRootPath, "Sannsyn"),viewModel);
         }
 
         public ActionResult StopAndStartSannsynService()
         {
             //stop and start Sannsyn Service
-
-            return View(string.Format("{0}{1}/Views/SannsynAdmin/Index.cshtml", Paths.ProtectedRootPath, "Sannsyn"));
+            SannsynAdminViewModel viewModel = new SannsynAdminViewModel();
+            return RedirectToAction("Index");
         }
 
-
-
-        private List<PurchaseOrder> GetOrders(string sqlWhereClause, string sqlMetaWhereClause, int recordCount = int.MaxValue)
+        public ActionResult IndexProductsWithCategories()
         {
-            var orderSearchParameters = new OrderSearchParameters();
-            if (!string.IsNullOrEmpty(sqlWhereClause))
-            {
-                orderSearchParameters.SqlWhereClause = sqlWhereClause;
-            }
+            SannsynAdminViewModel viewModel = new SannsynAdminViewModel();
+            int numberOfProductsToSannsyn = _sannsynCatalogIndexService.IndexProductsWithCategories();
+            viewModel.StatusMessage = string.Format("Sent {0} products with categories to sannsyn", numberOfProductsToSannsyn);
+            return View(string.Format("{0}{1}/Views/SannsynAdmin/Index.cshtml", Paths.ProtectedRootPath, "Sannsyn"), viewModel);
 
-            if (!string.IsNullOrEmpty(sqlMetaWhereClause))
-            {
-                orderSearchParameters.SqlMetaWhereClause = sqlMetaWhereClause;
-            }
-
-            var orderSearchOptions = new OrderSearchOptions();
-            orderSearchOptions.Namespace = "Mediachase.Commerce.Orders";
-            orderSearchOptions.Classes.Add("PurchaseOrder");
-            orderSearchOptions.Classes.Add("Shipment");
-            orderSearchOptions.CacheResults = false;
-            orderSearchOptions.RecordsToRetrieve = recordCount;
-
-            return OrderContext.Current.FindPurchaseOrders(orderSearchParameters, orderSearchOptions).ToList();
         }
+
+
+
+      
 
 
     }
