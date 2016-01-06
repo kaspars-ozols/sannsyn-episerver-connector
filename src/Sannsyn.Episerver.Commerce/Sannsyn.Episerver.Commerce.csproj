@@ -253,6 +253,7 @@
     <Compile Include="Admin\SannsynOverviewController.cs" />
     <Compile Include="Backend\BackendService.cs" />
     <Compile Include="Extensions\LineItemExtensions.cs" />
+    <Compile Include="Initialization\MigrateAnonymousInitialization.cs" />
     <Compile Include="Models\SannsynDdsModel.cs" />
     <Compile Include="Models\SannsynRecommendModel.cs" />
     <Compile Include="Models\SannsynServiceStartStopModel.cs" />
