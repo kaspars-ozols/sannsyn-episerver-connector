@@ -11,7 +11,6 @@ using Sannsyn.Episerver.Commerce.Services;
 
 namespace Sannsyn.Episerver.Commerce.Admin
 {
-    [MenuItem("/global/sannsyn/Overview", Text = "Overview", SortIndex = 10)]
     public class SannsynOverviewController : Controller
     {
         private readonly RecommendationService _recommendationService;
@@ -26,6 +25,7 @@ namespace Sannsyn.Episerver.Commerce.Admin
             _sannsynAdminService = sannsynAdminService;
         }
 
+        [MenuItem("/global/sannsyn/Overview", Text = "Overview", SortIndex = 10)]
         public ActionResult Index()
         {
             var statusmodel = _sannsynAdminService.GetServiceStatus();
