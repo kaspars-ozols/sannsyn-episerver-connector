@@ -29,10 +29,10 @@ namespace Sannsyn.Episerver.Commerce.Extensions
             foreach (var category in parentCategories)
             {
                 NodeContent node = category as NodeContent;
-                if(node != null)
+                if (node != null)
                 {
                     string code = node.Code;
-                    if(names.Contains(code) == false)
+                    if (names.Contains(code) == false)
                     {
                         names.Add(code);
                     }
@@ -53,44 +53,36 @@ namespace Sannsyn.Episerver.Commerce.Extensions
             var allRelations = linksRepository.GetRelationsBySource(productContent.ContentLink);
             var categories = allRelations.OfType<NodeRelation>().ToList();
             List<CatalogContentBase> parentCategories = new List<CatalogContentBase>();
-            try
+            if (categories.Any())
             {
-                if (categories.Any())
+                // Add all categories (nodes) that this product is part of
+                foreach (var nodeRelation in categories)
                 {
-                    // Add all categories (nodes) that this product is part of
-                    foreach (var nodeRelation in categories)
+                    if (nodeRelation.Target != referenceConverter.GetRootLink())
                     {
-                        if (nodeRelation.Target != referenceConverter.GetRootLink())
+                        CatalogContentBase parentCategory =
+                            contentLoader.Get<CatalogContentBase>(nodeRelation.Target,
+                                new LanguageSelector(language));
+                        if (parentCategory != null && parentCategory.ContentType != CatalogContentType.Catalog)
                         {
-                            CatalogContentBase parentCategory =
-                                contentLoader.Get<CatalogContentBase>(nodeRelation.Target,
-                                    new LanguageSelector(language));
-                            if (parentCategory != null && parentCategory.ContentType != CatalogContentType.Catalog)
-                            {
-                                parentCategories.Add(parentCategory);
-                            }
+                            parentCategories.Add(parentCategory);
                         }
                     }
                 }
-
-                var content = productContent;
-
-                // Now walk the category tree until we hit the catalog node itself
-                while (content.ParentLink != null && content.ParentLink != referenceConverter.GetRootLink())
-                {
-                    CatalogContentBase parentCategory =
-                      contentLoader.Get<CatalogContentBase>(content.ParentLink, new LanguageSelector(language));
-                    if (parentCategory.ContentType != CatalogContentType.Catalog)
-                    {
-                        parentCategories.Add(parentCategory);
-                    }
-                    content = parentCategory;
-                }
             }
-            catch (Exception ex)
+
+            var content = productContent;
+
+            // Now walk the category tree until we hit the catalog node itself
+            while (content.ParentLink != null && content.ParentLink != referenceConverter.GetRootLink())
             {
-                // TODO: Fix this empty catch, it is too greedy
-               
+                CatalogContentBase parentCategory =
+                  contentLoader.Get<CatalogContentBase>(content.ParentLink, new LanguageSelector(language));
+                if (parentCategory.ContentType != CatalogContentType.Catalog)
+                {
+                    parentCategories.Add(parentCategory);
+                }
+                content = parentCategory;
             }
             return parentCategories;
         }

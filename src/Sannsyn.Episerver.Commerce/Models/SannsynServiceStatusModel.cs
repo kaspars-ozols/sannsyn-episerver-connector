@@ -2,9 +2,9 @@
 using Newtonsoft.Json;
 using Sannsyn.Episerver.Commerce.Extensions;
 
-namespace Sannsyn.Episerver.Commerce.Models.ViewModels
+namespace Sannsyn.Episerver.Commerce.Models
 {
-    public class ServiceStatusViewModel
+    public class SannsynServiceStatusModel
     {
         public string messageId { get; set; }
         public string accountId { get; set; }

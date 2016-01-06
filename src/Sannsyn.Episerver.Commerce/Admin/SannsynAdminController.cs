@@ -1,4 +1,5 @@
-﻿using EPiServer.ServiceLocation;
+﻿using System;
+using EPiServer.ServiceLocation;
 using EPiServer.Shell;
 using EPiServer.Shell.Navigation;
 using Mediachase.Commerce.Orders;
@@ -20,12 +21,15 @@ namespace Sannsyn.Episerver.Commerce.Admin
 
         private readonly ISannsynCatalogIndexService _sannsynCatalogIndexService;
         private readonly ISannsynOrderIndexerService _sannsynOrderIndexerService;
+        private readonly ISannsynAdminService _sannsynAdminService;
 
         public SannsynAdminController(ISannsynCatalogIndexService sannsynCatalogIndexService,
-            ISannsynOrderIndexerService sannsynOrderIndexerService)
+            ISannsynOrderIndexerService sannsynOrderIndexerService,
+            ISannsynAdminService sannsynAdminService)
         {
             _sannsynCatalogIndexService = sannsynCatalogIndexService;
             _sannsynOrderIndexerService = sannsynOrderIndexerService;
+            _sannsynAdminService = sannsynAdminService;
         }
 
 
@@ -51,9 +55,20 @@ namespace Sannsyn.Episerver.Commerce.Admin
 
         public ActionResult StopAndStartSannsynService()
         {
-            //stop and start Sannsyn Service
+
             SannsynAdminViewModel viewModel = new SannsynAdminViewModel();
-            viewModel.StatusMessage = "This is not implemented yet";
+
+            _sannsynAdminService.StopService();
+            var model = _sannsynAdminService.CreateService();
+            if(string.Compare(model.status, "active", StringComparison.InvariantCultureIgnoreCase) == 0)
+            {
+                viewModel.StatusMessage = "Service Created";
+            }
+            else
+            {
+                viewModel.StatusMessage = "Service not created. Returned: " + model.status;
+            }
+
             return View(string.Format("{0}{1}/Views/SannsynAdmin/Index.cshtml", Paths.ProtectedRootPath, "Sannsyn"), viewModel);
         }
 

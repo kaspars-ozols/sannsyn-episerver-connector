@@ -11,28 +11,24 @@ using Sannsyn.Episerver.Commerce.Services;
 
 namespace Sannsyn.Episerver.Commerce.Admin
 {
+    [MenuItem("/global/sannsyn/Overview", Text = "Overview", SortIndex = 10)]
     public class SannsynOverviewController : Controller
     {
-        private readonly BackendService _backendService;
         private readonly RecommendationService _recommendationService;
         private readonly ICurrentCustomerService _currentCustomerService;
+        private readonly ISannsynAdminService _sannsynAdminService;
 
-        public SannsynOverviewController(BackendService backendService, RecommendationService recommendationService, ICurrentCustomerService currentCustomerService)
+        public SannsynOverviewController(RecommendationService recommendationService, ICurrentCustomerService currentCustomerService,
+            ISannsynAdminService sannsynAdminService)
         {
-            _backendService = backendService;
             _recommendationService = recommendationService;
             _currentCustomerService = currentCustomerService;
+            _sannsynAdminService = sannsynAdminService;
         }
 
-        [MenuItem("/global/sannsyn/Overview", Text = "Overview", SortIndex = 10)]
         public ActionResult Index()
         {
-            Uri serviceUrl = _backendService.GetServiceMethodUri("servicestatus");
-            HttpClient client = _backendService.GetConfiguredClient();
-
-            HttpResponseMessage response = client.GetAsync(serviceUrl).Result;
-            var data = response.Content.ReadAsStringAsync();
-            var statusmodel = JsonConvert.DeserializeObject<ServiceStatusViewModel>(data.Result);
+            var statusmodel = _sannsynAdminService.GetServiceStatus();
 
             var model = new SannsynOverviewViewModel();
             model.ServiceStatus = statusmodel;

@@ -68,12 +68,7 @@ namespace Sannsyn.Episerver.Commerce.Backend
                 _log.Debug("Calling: {0}", serviceUrl.ToString());
             }
 
-            HttpResponseMessage response = client.GetAsync(serviceUrl).Result;
-
-            if (_configuration.LogSendData && _log.IsDebugEnabled())
-            {
-                _log.Debug("Sent to Sannsyn. Result: {0} - {1}", response.StatusCode, response.ReasonPhrase);
-            }
+            HttpResponseMessage response = GetResult(serviceUrl, client);
 
             var data = response.Content.ReadAsStringAsync();
             var result = data.Result;
@@ -90,6 +85,18 @@ namespace Sannsyn.Episerver.Commerce.Backend
             var model = JsonConvert.DeserializeObject<T>(result);
             return model;
 
+        }
+
+        public HttpResponseMessage GetResult(Uri serviceUrl, HttpClient client)
+        {
+            HttpResponseMessage response = client.GetAsync(serviceUrl).Result;
+
+            if (_configuration.LogSendData && _log.IsDebugEnabled())
+            {
+                _log.Debug("Sent to Sannsyn. Result: {0} - {1}", response.StatusCode, response.ReasonPhrase);
+            }
+
+            return response;
         }
 
     }
