@@ -14,14 +14,14 @@ namespace Sannsyn.Episerver.Commerce.Admin
     public class SannsynOverviewController : Controller
     {
         private readonly RecommendationService _recommendationService;
-        private readonly ICurrentCustomerService _currentCustomerService;
+        private readonly ICustomerService _customerService;
         private readonly ISannsynAdminService _sannsynAdminService;
 
-        public SannsynOverviewController(RecommendationService recommendationService, ICurrentCustomerService currentCustomerService,
+        public SannsynOverviewController(RecommendationService recommendationService, ICustomerService currentCustomerService,
             ISannsynAdminService sannsynAdminService)
         {
             _recommendationService = recommendationService;
-            _currentCustomerService = currentCustomerService;
+            _customerService = currentCustomerService;
             _sannsynAdminService = sannsynAdminService;
         }
 
@@ -33,7 +33,7 @@ namespace Sannsyn.Episerver.Commerce.Admin
             var model = new SannsynOverviewViewModel();
             model.ServiceStatus = statusmodel;
 
-            var userId = _currentCustomerService.GetCurrentUserId();
+            var userId = _customerService.GetCurrentUserId();
             model.CurrentUserId = userId;
             model.CurrentUserRecommendations = _recommendationService.GetRecommendationsForCustomer(userId);
 

@@ -17,7 +17,7 @@ namespace Sannsyn.Episerver.Commerce.Initialization
     public class MigrateAnonymousInitialization : IInitializableHttpModule
     {
         private ILogger _log;
-        private ICurrentCustomerService _currentCustomerService;
+        private ICustomerService _customerService;
 
         public MigrateAnonymousInitialization()
         {
@@ -26,7 +26,7 @@ namespace Sannsyn.Episerver.Commerce.Initialization
 
         public void Initialize(InitializationEngine context)
         {
-            _currentCustomerService = ServiceLocator.Current.GetInstance<ICurrentCustomerService>();
+            _customerService = ServiceLocator.Current.GetInstance<ICustomerService>();
         }
 
         public void Uninitialize(InitializationEngine context)
@@ -49,8 +49,8 @@ namespace Sannsyn.Episerver.Commerce.Initialization
 
         private void OnMigrateAnonymous(object sender, ProfileMigrateEventArgs args)
         {
-            string newId = _currentCustomerService.GetCurrentUserId();
-
+            string newId = _customerService.GetCurrentUserId();
+            _customerService.MigrateUser(args.AnonymousID, newId);
             _log.Debug("Migrating from: {0} to: {1}", args.AnonymousID, newId);
         }
 

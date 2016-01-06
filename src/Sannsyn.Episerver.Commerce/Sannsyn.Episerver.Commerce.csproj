@@ -271,9 +271,9 @@
     <Compile Include="Services\ISannsynAdminService.cs" />
     <Compile Include="Services\ISannsynUpdateService.cs" />
     <Compile Include="Services\SannsynCatalogIndexService.cs" />
-    <Compile Include="Services\CurrentCustomerService.cs" />
+    <Compile Include="Services\CustomerService.cs" />
     <Compile Include="Services\ISannsynCatalogIndexService.cs" />
-    <Compile Include="Services\ICurrentCustomerService.cs" />
+    <Compile Include="Services\ICustomerService.cs" />
     <Compile Include="Services\IRecommendationService.cs" />
     <Compile Include="Services\ISannsynOrderIndexerService.cs" />
     <Compile Include="Services\RecommendationService.cs" />
