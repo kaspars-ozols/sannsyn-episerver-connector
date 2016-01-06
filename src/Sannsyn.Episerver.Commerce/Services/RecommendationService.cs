@@ -26,7 +26,7 @@ namespace Sannsyn.Episerver.Commerce.Services
         public IEnumerable<string> GetRecommendationsForCustomer(string customerId, int maxCount = 10)
         {
             // Uses aggregate MostPopularClickItems
-            Uri serviceUrl = _backendService.GetServiceMethodUri("recommend", "UserItemClickBuy/" + customerId);
+            Uri serviceUrl = _backendService.GetServiceMethodUri("recommend", "UserItemClickBuy/" + customerId + "/" +maxCount);
             HttpClient client = _backendService.GetConfiguredClient();
             var model = _backendService.GetResult<SannsynRecommendModel>(serviceUrl, client);
 
