@@ -14,6 +14,7 @@ namespace Sannsyn.Episerver.Commerce.Admin
 
 
     //[System.Web.Mvc.Authorize(Roles = "Administrators, WebAdmins, WebEditors")]
+    [MenuItem("/global/sannsyn/admin", Text = "Admin", SortIndex = 20)]
     public class SannsynAdminController : Controller
     {
 
@@ -28,7 +29,7 @@ namespace Sannsyn.Episerver.Commerce.Admin
         }
 
 
-        [MenuItem("/global/sannsyn/admin", Text = "Admin", SortIndex = 20)]
+        
         public ActionResult Index()
         {
             SannsynAdminViewModel viewModel = new SannsynAdminViewModel();
@@ -52,7 +53,8 @@ namespace Sannsyn.Episerver.Commerce.Admin
         {
             //stop and start Sannsyn Service
             SannsynAdminViewModel viewModel = new SannsynAdminViewModel();
-            return RedirectToAction("Index");
+            viewModel.StatusMessage = "This is not implemented yet";
+            return View(string.Format("{0}{1}/Views/SannsynAdmin/Index.cshtml", Paths.ProtectedRootPath, "Sannsyn"), viewModel);
         }
 
         public ActionResult IndexProductsWithCategories()
