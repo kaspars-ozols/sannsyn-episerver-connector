@@ -38,14 +38,14 @@ namespace Sannsyn.Episerver.Commerce.Services
 
         }
 
-        public IEnumerable<string> GetRecommendationsForCustomerByCategory(string customerId,string category, int maxCount = 10)
+        public IEnumerable<string> GetRecommendationsForCustomerByCategory(string customerId,List<string> categories, int maxCount = 10)
         {
             Uri serviceUrl = _backendService.GetServiceMethodUri("miprecommend", null, null);
             SannsynMipRecommendModel mipRecommendModel = new SannsynMipRecommendModel();
             mipRecommendModel.Service = _configuration.Service;
             mipRecommendModel.Recommender = "UserItemClickBuy";
             mipRecommendModel.MainID = customerId;
-            mipRecommendModel.AuxiliaryIDs = new List<string> {category};
+            mipRecommendModel.AuxiliaryIDs = categories;
             mipRecommendModel.Number = maxCount;
             mipRecommendModel.Tags = new List<string>();
           
