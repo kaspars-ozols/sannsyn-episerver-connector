@@ -252,6 +252,7 @@
     <Compile Include="Admin\SannsynAdminController.cs" />
     <Compile Include="Admin\SannsynOverviewController.cs" />
     <Compile Include="Backend\BackendService.cs" />
+    <Compile Include="Constants.cs" />
     <Compile Include="Extensions\LineItemExtensions.cs" />
     <Compile Include="Initialization\MigrateAnonymousInitialization.cs" />
     <Compile Include="Models\SannsynDdsModel.cs" />

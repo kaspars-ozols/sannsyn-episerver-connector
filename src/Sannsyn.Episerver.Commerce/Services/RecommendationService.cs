@@ -29,7 +29,8 @@ namespace Sannsyn.Episerver.Commerce.Services
         /// <returns>A list of entry codes</returns>
         public IEnumerable<string> GetRecommendationsForCustomer(string customerId, int maxCount = 10)
         {
-            Uri serviceUrl = _backendService.GetServiceMethodUri("recommend", "UserItemClickBuy/" + customerId + "/" +maxCount);
+            string recommender = Constants.Recommenders.UserItemClickBuy;
+            Uri serviceUrl = _backendService.GetServiceMethodUri(Constants.ServiceMethod.Recommend, recommender +"/" + customerId + "/" +maxCount);
            
             HttpClient client = _backendService.GetConfiguredClient();
             var model = _backendService.GetResult<SannsynRecommendModel>(serviceUrl, client);
@@ -40,10 +41,11 @@ namespace Sannsyn.Episerver.Commerce.Services
 
         public IEnumerable<string> GetRecommendationsForCustomerByCategory(string customerId,List<string> categories, int maxCount = 10)
         {
-            Uri serviceUrl = _backendService.GetServiceMethodUri("miprecommend", null, null);
+            string recommender = Constants.Recommenders.UserItemClickBuy;
+            Uri serviceUrl = _backendService.GetServiceMethodUri(Constants.ServiceMethod.MipRecommend, null, null);
             SannsynMipRecommendModel mipRecommendModel = new SannsynMipRecommendModel();
             mipRecommendModel.Service = _configuration.Service;
-            mipRecommendModel.Recommender = "UserItemClickBuy";
+            mipRecommendModel.Recommender = recommender;
             mipRecommendModel.MainID = customerId;
             mipRecommendModel.AuxiliaryIDs = categories;
             mipRecommendModel.Number = maxCount;
@@ -67,7 +69,8 @@ namespace Sannsyn.Episerver.Commerce.Services
         /// <returns>A list of entry codes</returns>
         public IEnumerable<string> GetRecommendationsForProduct(string productCode, int maxCount = 10)
         {
-            Uri serviceUrl = _backendService.GetServiceMethodUri("recommend", "ItemItemClickBuy/" + productCode);
+            string recommender = Constants.Recommenders.ItemItemClickBuy;
+            Uri serviceUrl = _backendService.GetServiceMethodUri(Constants.ServiceMethod.Recommend, recommender +"/" + productCode);
             HttpClient client = _backendService.GetConfiguredClient();
             var model = _backendService.GetResult<SannsynRecommendModel>(serviceUrl, client);
 
