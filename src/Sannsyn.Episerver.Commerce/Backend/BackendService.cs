@@ -28,7 +28,8 @@ namespace Sannsyn.Episerver.Commerce.Backend
             var password = _configuration.Password;
             HttpClient client = new HttpClient();
             byte[] cred = Encoding.UTF8.GetBytes(username + ":" + password);
-            client.DefaultRequestHeaders.Authorization = new System.Net.Http.Headers.AuthenticationHeaderValue("Basic", Convert.ToBase64String(cred));
+            client.DefaultRequestHeaders.Authorization = new System.Net.Http.Headers.AuthenticationHeaderValue("Basic",
+                Convert.ToBase64String(cred));
 
             return client;
         }
@@ -52,7 +53,7 @@ namespace Sannsyn.Episerver.Commerce.Backend
                 url = url + "/" + service;
             }
 
-            if(string.IsNullOrEmpty(parameters) == false)
+            if (string.IsNullOrEmpty(parameters) == false)
             {
                 url = url + "/" + parameters;
             }
@@ -63,12 +64,26 @@ namespace Sannsyn.Episerver.Commerce.Backend
 
         public T GetResult<T>(Uri serviceUrl, HttpClient client)
         {
+
+            return GetResult<T>(serviceUrl, client, null);
+        }
+
+
+        public T GetResult<T>(Uri serviceUrl, HttpClient client, HttpContent content)
+        {
             if (_configuration.LogSendData && _log.IsDebugEnabled())
             {
                 _log.Debug("Calling: {0}", serviceUrl.ToString());
             }
-
-            HttpResponseMessage response = GetResult(serviceUrl, client);
+            HttpResponseMessage response;
+            if (content == null)
+            {
+                response = GetResult(serviceUrl, client);
+            }
+            else
+            {
+                response = GetResult(serviceUrl, client, content);
+            }
 
             var data = response.Content.ReadAsStringAsync();
             var result = data.Result;
@@ -84,8 +99,8 @@ namespace Sannsyn.Episerver.Commerce.Backend
 
             var model = JsonConvert.DeserializeObject<T>(result);
             return model;
-
         }
+
 
         public HttpResponseMessage GetResult(Uri serviceUrl, HttpClient client)
         {
@@ -99,5 +114,16 @@ namespace Sannsyn.Episerver.Commerce.Backend
             return response;
         }
 
+        public HttpResponseMessage GetResult(Uri serviceUrl, HttpClient client, HttpContent content)
+        {
+            HttpResponseMessage response = client.PutAsync(serviceUrl, content).Result; ;
+
+            if (_configuration.LogSendData && _log.IsDebugEnabled())
+            {
+                _log.Debug("Sent to Sannsyn. Result: {0} - {1}", response.StatusCode, response.ReasonPhrase);
+            }
+
+            return response;
+        }
     }
 }

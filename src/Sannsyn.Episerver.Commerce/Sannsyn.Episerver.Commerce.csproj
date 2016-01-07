@@ -255,6 +255,7 @@
     <Compile Include="Extensions\LineItemExtensions.cs" />
     <Compile Include="Initialization\MigrateAnonymousInitialization.cs" />
     <Compile Include="Models\SannsynDdsModel.cs" />
+    <Compile Include="Models\SannsynMipRecommendModel.cs" />
     <Compile Include="Models\SannsynRecommendModel.cs" />
     <Compile Include="Models\SannsynServiceStartStopModel.cs" />
     <Compile Include="Models\ViewModels\SannsynOverviewViewModel.cs" />

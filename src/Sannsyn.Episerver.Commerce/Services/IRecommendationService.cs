@@ -9,5 +9,8 @@ namespace Sannsyn.Episerver.Commerce.Services
         IEnumerable<string> GetRecommendationsForProduct(string productCode, int maxCount = 10);
 
         IEnumerable<string> GetRecommendationsForCart(IEnumerable<string> productCodes, int maxCount = 10);
+
+        IEnumerable<string> GetRecommendationsForCustomerByCategory(string customerId, string category,
+            int maxCount = 10);
     }
 }

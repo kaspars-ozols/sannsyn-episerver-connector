@@ -2,7 +2,9 @@
 using System.Collections.Generic;
 using System.Net.Http;
 using EPiServer.ServiceLocation;
+using Newtonsoft.Json;
 using Sannsyn.Episerver.Commerce.Backend;
+using Sannsyn.Episerver.Commerce.Configuration;
 using Sannsyn.Episerver.Commerce.Models;
 
 namespace Sannsyn.Episerver.Commerce.Services
@@ -11,10 +13,12 @@ namespace Sannsyn.Episerver.Commerce.Services
     public class RecommendationService : IRecommendationService
     {
         private readonly BackendService _backendService;
+        private readonly SannsynConfiguration _configuration;
 
-        public RecommendationService(BackendService backendService )
+        public RecommendationService(BackendService backendService, SannsynConfiguration configuration)
         {
             _backendService = backendService;
+            _configuration = configuration;
         }
 
         /// <summary>
@@ -25,14 +29,35 @@ namespace Sannsyn.Episerver.Commerce.Services
         /// <returns>A list of entry codes</returns>
         public IEnumerable<string> GetRecommendationsForCustomer(string customerId, int maxCount = 10)
         {
-            // Uses aggregate MostPopularClickItems
             Uri serviceUrl = _backendService.GetServiceMethodUri("recommend", "UserItemClickBuy/" + customerId + "/" +maxCount);
+           
             HttpClient client = _backendService.GetConfiguredClient();
             var model = _backendService.GetResult<SannsynRecommendModel>(serviceUrl, client);
 
             return model.Result;
 
         }
+
+        public IEnumerable<string> GetRecommendationsForCustomerByCategory(string customerId,string category, int maxCount = 10)
+        {
+            Uri serviceUrl = _backendService.GetServiceMethodUri("miprecommend", null, null);
+            SannsynMipRecommendModel mipRecommendModel = new SannsynMipRecommendModel();
+            mipRecommendModel.Service = _configuration.Service;
+            mipRecommendModel.Recommender = "UserItemClickBuy";
+            mipRecommendModel.MainID = customerId;
+            mipRecommendModel.AuxiliaryIDs = new List<string> {category};
+            mipRecommendModel.Number = maxCount;
+            mipRecommendModel.Tags = new List<string>();
+          
+            HttpClient client = _backendService.GetConfiguredClient();
+            var jsonData = JsonConvert.SerializeObject(mipRecommendModel);
+            HttpContent content = new StringContent(jsonData);
+            SannsynRecommendModel model = _backendService.GetResult<SannsynRecommendModel>(serviceUrl, client, content);
+            
+            return model.Result;
+
+        }
+
 
         /// <summary>
         /// Get recommended products for a given product
