@@ -81,9 +81,14 @@ namespace Sannsyn.Episerver.Commerce.Admin
 
         }
 
+        public ActionResult UpdateProductsWithScore()
+        {
+            SannsynAdminViewModel viewModel = new SannsynAdminViewModel();
+            return View(string.Format("{0}{1}/Views/SannsynAdmin/Index.cshtml", Paths.ProtectedRootPath, "Sannsyn"), viewModel);
+        }
 
 
-      
+
 
 
     }

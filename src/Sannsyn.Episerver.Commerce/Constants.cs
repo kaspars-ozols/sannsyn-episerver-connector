@@ -10,7 +10,7 @@
             public const string Update = "update";
             public const string Start = "start";
             public const string Stop = "stop";
-            public const string Servicestatus = "ServiceStatus";
+            public const string Servicestatus = "servicestatus";
         }
 
         public static class Recommenders
