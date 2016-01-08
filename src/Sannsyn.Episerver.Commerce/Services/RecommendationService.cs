@@ -70,7 +70,7 @@ namespace Sannsyn.Episerver.Commerce.Services
         public IEnumerable<string> GetRecommendationsForProduct(string productCode, int maxCount = 10)
         {
             string recommender = Constants.Recommenders.ItemItemClickBuy;
-            Uri serviceUrl = _backendService.GetServiceMethodUri(Constants.ServiceMethod.Recommend, recommender +"/" + productCode);
+            Uri serviceUrl = _backendService.GetServiceMethodUri(Constants.ServiceMethod.Recommend, recommender +"/" + productCode + "/" + maxCount);
             HttpClient client = _backendService.GetConfiguredClient();
             var model = _backendService.GetResult<SannsynRecommendModel>(serviceUrl, client);
 
