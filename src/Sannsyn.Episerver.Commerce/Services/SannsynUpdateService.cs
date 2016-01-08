@@ -1,9 +1,5 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
 using System.Net.Http;
-using System.Text;
-using System.Threading.Tasks;
 using EPiServer.Logging;
 using EPiServer.ServiceLocation;
 using Newtonsoft.Json;
@@ -38,7 +34,7 @@ namespace Sannsyn.Episerver.Commerce.Services
         {
             var jsonData = JsonConvert.SerializeObject(sannsynModel);
             // This method does not require the service name
-            Uri serviceUrl = _backendService.GetServiceMethodUri("update", null, null);
+            Uri serviceUrl = _backendService.GetServiceMethodUri(Constants.ServiceMethod.Update, null, null);
             HttpClient client = _backendService.GetConfiguredClient();
 
             HttpContent content = new StringContent(jsonData);

@@ -37,7 +37,7 @@ namespace Sannsyn.Episerver.Commerce.Services
         public void MigrateUser(string oldId, string newId)
         {
             string parameters = newId + "/" + oldId;
-            Uri serviceUrl = _backendService.GetServiceMethodUri("merge", parameters);
+            Uri serviceUrl = _backendService.GetServiceMethodUri(Constants.ServiceMethod.Merge, parameters);
             HttpClient client = _backendService.GetConfiguredClient();
             var responseMessage = _backendService.GetResult(serviceUrl, client);
         }

@@ -1,14 +1,11 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Net.Http;
 using EPiServer.Commerce.Catalog.ContentTypes;
 using EPiServer.Logging;
 using EPiServer.ServiceLocation;
 using Mediachase.Commerce.Orders;
 using Mediachase.Commerce.Orders.Search;
-using Newtonsoft.Json;
-using Sannsyn.Episerver.Commerce.Backend;
 using Sannsyn.Episerver.Commerce.Configuration;
 using Sannsyn.Episerver.Commerce.Models;
 using Sannsyn.Episerver.Commerce.Extensions;
@@ -92,7 +89,7 @@ namespace Sannsyn.Episerver.Commerce.Services
 
             SannsynUpdateEntityModel model = new SannsynUpdateEntityModel();
             model.Customer = customerId.ToString();
-            model.Tags = new List<string> {"buy"};
+            model.Tags = new List<string> {Constants.Tags.Buy};
             model.EntityIDs = new List<string> { code };
             model.Time = lineItem.Modified.ToJavaTimeStamp();
             model.Boost = (float) 0.0;

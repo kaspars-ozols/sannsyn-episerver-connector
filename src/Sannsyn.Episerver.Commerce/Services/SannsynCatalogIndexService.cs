@@ -2,20 +2,14 @@
 using System.Collections.Generic;
 using System.Globalization;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using EPiServer;
 using EPiServer.Commerce.Catalog.ContentTypes;
 using EPiServer.Core;
-using EPiServer.Framework.Localization;
 using EPiServer.Logging;
 using EPiServer.ServiceLocation;
 using Mediachase.Commerce;
 using Mediachase.Commerce.Catalog;
 using Mediachase.Commerce.Catalog.Dto;
-using Mediachase.Commerce.Markets;
-using Mediachase.Commerce.Orders;
-using Mediachase.Commerce.Orders.Search;
 using Sannsyn.Episerver.Commerce.Configuration;
 using Sannsyn.Episerver.Commerce.Extensions;
 using Sannsyn.Episerver.Commerce.Models;
@@ -128,7 +122,7 @@ namespace Sannsyn.Episerver.Commerce.Services
                 List<string> parentCategories = product.GetParentCategoryCodes(product.Language.Name);
                 SannsynUpdateEntityModel model = new SannsynUpdateEntityModel();
                 model.Customer = product.Code;
-                model.Tags = new List<string> { "itemcat" };
+                model.Tags = new List<string> { Constants.Tags.ItemCat };
                 model.EntityIDs = parentCategories;
                 sannsynObjects.Add(model);
 

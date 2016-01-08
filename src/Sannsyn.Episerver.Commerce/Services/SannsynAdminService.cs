@@ -1,16 +1,10 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
 using System.Net.Http;
-using System.Text;
-using System.Threading.Tasks;
 using EPiServer.Logging;
 using EPiServer.ServiceLocation;
-using Newtonsoft.Json;
 using Sannsyn.Episerver.Commerce.Backend;
 using Sannsyn.Episerver.Commerce.Configuration;
 using Sannsyn.Episerver.Commerce.Models;
-using Sannsyn.Episerver.Commerce.Models.ViewModels;
 
 namespace Sannsyn.Episerver.Commerce.Services
 {
@@ -33,7 +27,7 @@ namespace Sannsyn.Episerver.Commerce.Services
         public SannsynServiceStartStopModel CreateService()
         {
             // This method does not require the service name
-            Uri serviceUrl = _backendService.GetServiceMethodUri("start", _configuration.Configuration, _configuration.Service);
+            Uri serviceUrl = _backendService.GetServiceMethodUri(Constants.ServiceMethod.Start, _configuration.Configuration, _configuration.Service);
             HttpClient client = _backendService.GetConfiguredClient();
 
             var model = _backendService.GetResult<SannsynServiceStartStopModel>(serviceUrl, client);
@@ -45,7 +39,7 @@ namespace Sannsyn.Episerver.Commerce.Services
 
         public SannsynServiceStatusModel GetServiceStatus()
         {
-            Uri serviceUrl = _backendService.GetServiceMethodUri("servicestatus", null, _configuration.Service);
+            Uri serviceUrl = _backendService.GetServiceMethodUri(Constants.ServiceMethod.Servicestatus, null, _configuration.Service);
             HttpClient client = _backendService.GetConfiguredClient();
             var model = _backendService.GetResult<SannsynServiceStatusModel>(serviceUrl, client);
 
@@ -54,7 +48,7 @@ namespace Sannsyn.Episerver.Commerce.Services
 
         public bool StopService()
         {
-            Uri serviceUrl = _backendService.GetServiceMethodUri("stop", null, _configuration.Service);
+            Uri serviceUrl = _backendService.GetServiceMethodUri(Constants.ServiceMethod.Stop, null, _configuration.Service);
             HttpClient client = _backendService.GetConfiguredClient();
             var responseMessage = _backendService.GetResult(serviceUrl, client);
 
