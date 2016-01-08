@@ -17,6 +17,7 @@
         {
             public const string ItemItemClickBuy = "ItemItemClickBuy";
             public const string UserItemClickBuy = "UserItemClickBuy";
+            public const string ScoredItems = "ScoredItems";
         }
 
         public static class Tags
