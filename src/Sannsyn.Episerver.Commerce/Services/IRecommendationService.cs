@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using Sannsyn.Episerver.Commerce.Models;
 
 namespace Sannsyn.Episerver.Commerce.Services
 {
@@ -12,5 +13,7 @@ namespace Sannsyn.Episerver.Commerce.Services
 
         IEnumerable<string> GetRecommendationsForCustomerByCategory(string customerId, List<string> categories,
             int maxCount = 10);
+
+        Dictionary<string, double> GetScoreForItems(int maxCount = 10000);
     }
 }

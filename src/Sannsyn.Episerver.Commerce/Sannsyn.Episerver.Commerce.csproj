@@ -259,6 +259,7 @@
     <Compile Include="Models\SannsynMipRecommendModel.cs" />
     <Compile Include="Models\SannsynRecommendModel.cs" />
     <Compile Include="Models\SannsynServiceStartStopModel.cs" />
+    <Compile Include="Models\ScoredItemsModel.cs" />
     <Compile Include="Models\ViewModels\SannsynOverviewViewModel.cs" />
     <Compile Include="Models\SannsynServiceStatusModel.cs" />
     <Compile Include="ClientScriptRegistration\SannsynResourceRegister.cs" />

@@ -9,6 +9,7 @@ using Sannsyn.Episerver.Commerce.Services;
 using System.Collections.Generic;
 using System.Linq;
 using System.Web.Mvc;
+using Sannsyn.Episerver.Commerce.Models;
 
 namespace Sannsyn.Episerver.Commerce.Admin
 {
@@ -22,14 +23,17 @@ namespace Sannsyn.Episerver.Commerce.Admin
         private readonly ISannsynCatalogIndexService _sannsynCatalogIndexService;
         private readonly ISannsynOrderIndexerService _sannsynOrderIndexerService;
         private readonly ISannsynAdminService _sannsynAdminService;
+        private readonly IRecommendationService _recommendationService;
 
         public SannsynAdminController(ISannsynCatalogIndexService sannsynCatalogIndexService,
             ISannsynOrderIndexerService sannsynOrderIndexerService,
-            ISannsynAdminService sannsynAdminService)
+            ISannsynAdminService sannsynAdminService,
+            IRecommendationService recommendationService)
         {
             _sannsynCatalogIndexService = sannsynCatalogIndexService;
             _sannsynOrderIndexerService = sannsynOrderIndexerService;
             _sannsynAdminService = sannsynAdminService;
+            _recommendationService = recommendationService;
         }
 
 
@@ -80,16 +84,6 @@ namespace Sannsyn.Episerver.Commerce.Admin
             return View(string.Format("{0}{1}/Views/SannsynAdmin/Index.cshtml", Paths.ProtectedRootPath, "Sannsyn"), viewModel);
 
         }
-
-        public ActionResult UpdateProductsWithScore()
-        {
-            SannsynAdminViewModel viewModel = new SannsynAdminViewModel();
-            return View(string.Format("{0}{1}/Views/SannsynAdmin/Index.cshtml", Paths.ProtectedRootPath, "Sannsyn"), viewModel);
-        }
-
-
-
-
 
     }
 }

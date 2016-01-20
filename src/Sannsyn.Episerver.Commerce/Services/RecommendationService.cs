@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Net.Http;
 using EPiServer.ServiceLocation;
 using Newtonsoft.Json;
@@ -89,6 +90,22 @@ namespace Sannsyn.Episerver.Commerce.Services
         }
 
 
+        public Dictionary<string,double> GetScoreForItems(int maxCount = 10000)
+        {
+            Dictionary<string, double> itemScores = new Dictionary<string, double>();
+            Uri serviceUrl = _backendService.GetServiceMethodUri(Constants.ServiceMethod.Recommend, "ScoredItems/a/" + maxCount);
+            HttpClient client = _backendService.GetConfiguredClient();
+            var model = _backendService.GetResult<ScoredItemsModel>(serviceUrl, client);
+            if (model.result != null && model.result.Any())
+            {
+                foreach (var scoredItem in model.result)
+                {
+                    itemScores.Add(scoredItem.id, scoredItem.w);
+                }
+            }
+            return itemScores;
+        }
 
+       
     }
 }
