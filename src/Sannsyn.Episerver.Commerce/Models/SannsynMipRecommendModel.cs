@@ -14,7 +14,7 @@ namespace Sannsyn.Episerver.Commerce.Models
         [JsonProperty(PropertyName = "externalIds")]
         public List<string> ExternalIds { get; set; }
 
-        [JsonProperty(PropertyName = "number")]
+        [JsonProperty(PropertyName = "n")]
         public int Number { get; set; }
 
         [JsonProperty(PropertyName = "tags")]

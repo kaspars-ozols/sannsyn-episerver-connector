@@ -113,6 +113,11 @@ namespace Sannsyn.Episerver.Commerce.Backend
 
         public HttpResponseMessage GetResult(Uri serviceUrl, HttpClient client, HttpContent content)
         {
+            if (_configuration.LogSendData && _log.IsDebugEnabled())
+            {
+                _log.Debug("HttpContent: {0}", content.ReadAsStringAsync().Result);
+            }
+
             HttpResponseMessage response = client.PutAsync(serviceUrl, content).Result; ;
 
             if (_configuration.LogSendData && _log.IsDebugEnabled())
