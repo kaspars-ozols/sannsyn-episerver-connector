@@ -14,8 +14,8 @@ namespace Sannsyn.Episerver.Commerce.Models
         [JsonProperty(PropertyName = "mainID")]
         public string MainID { get; set; }
 
-        [JsonProperty(PropertyName = "auxiliaryIDs")]
-        public List<string> AuxiliaryIDs { get; set; }
+        [JsonProperty(PropertyName = "externalIds")]
+        public List<string> ExternalIds { get; set; }
 
         [JsonProperty(PropertyName = "number")]
         public int Number { get; set; }
