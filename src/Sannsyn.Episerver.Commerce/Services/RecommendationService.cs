@@ -42,7 +42,7 @@ namespace Sannsyn.Episerver.Commerce.Services
 
         public IEnumerable<string> GetRecommendationsForCustomerByCategory(string customerId,List<string> categories, int maxCount = 10)
         {
-            string recommender = Constants.Recommenders.UserItemClickBuy;
+            string recommender = Constants.Recommenders.UserItemCategoryClickBuy;
             Uri serviceUrl = _backendService.GetServiceMethodUri(Constants.ServiceMethod.MipRecommend, null, null);
             SannsynMipRecommendModel mipRecommendModel = new SannsynMipRecommendModel();
             mipRecommendModel.Service = _configuration.Service;
