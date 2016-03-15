@@ -42,26 +42,7 @@ namespace Sannsyn.Episerver.Commerce.Services
 
         public IEnumerable<string> GetRecommendationsForCustomerByCategory(string customerId,List<string> categories, int maxCount = 10)
         {
-            string recommender = Constants.Recommenders.UserItemCategoryClickBuy;
-            Uri serviceUrl = _backendService.GetServiceMethodUri(Constants.ServiceMethod.MipRecommend, null, null);
-            SannsynMipRecommendModel mipRecommendModel = new SannsynMipRecommendModel();
-            mipRecommendModel.Service = _configuration.Service;
-            mipRecommendModel.Recommender = recommender;
-            // customer id is first in external id list, category number two
-            mipRecommendModel.ExternalIds = new List<string>();
-            mipRecommendModel.ExternalIds.Add(customerId);
-            mipRecommendModel.ExternalIds.AddRange(categories);
-
-            mipRecommendModel.Number = maxCount;
-            mipRecommendModel.Tags = new List<string>();
-          
-            HttpClient client = _backendService.GetConfiguredClient();
-            var jsonData = JsonConvert.SerializeObject(mipRecommendModel);
-            HttpContent content = new StringContent(jsonData);
-            SannsynRecommendModel model = _backendService.GetResult<SannsynRecommendModel>(serviceUrl, client, content);
-            
-            return model.Result;
-
+            return MipRecommend(customerId, categories, maxCount, Constants.Recommenders.UserItemCategoryClickBuy);
         }
 
 
@@ -82,16 +63,16 @@ namespace Sannsyn.Episerver.Commerce.Services
         }
 
         /// <summary>
-        /// Recommended products based on what other customers have bought
+        /// Get recommended products based on what a customer has in the cart
         /// </summary>
-        /// <param name="productCodes"></param>
-        /// <param name="maxCount"></param>
-        /// <returns></returns>
-        public IEnumerable<string> GetRecommendationsForCart(IEnumerable<string> productCodes, int maxCount = 10)
+        /// <param name="customerId">Customer id to get Recommendations for</param>
+        /// <param name="productCodes">The products to get recommendations for</param>
+        /// <param name="maxCount">Number of recommendations to return</param>
+        /// <returns>A list of entry codes</returns>
+        public IEnumerable<string> GetRecommendationsForCart(string customerId, IEnumerable<string> productCodes, int maxCount = 10)
         {
-            return null;
+            return MipRecommend(customerId, productCodes, maxCount, Constants.Recommenders.CartItemsRecommender);
         }
-
 
         public Dictionary<string,double> GetScoreForItems(int maxCount = 10000)
         {
@@ -109,6 +90,28 @@ namespace Sannsyn.Episerver.Commerce.Services
             return itemScores;
         }
 
-       
+        protected IEnumerable<string> MipRecommend(string customerId, IEnumerable<string> externalIds, int maxCount, string recommender)
+        {
+            Uri serviceUrl = _backendService.GetServiceMethodUri(Constants.ServiceMethod.MipRecommend, null, null);
+            SannsynMipRecommendModel mipRecommendModel = new SannsynMipRecommendModel();
+            mipRecommendModel.Service = _configuration.Service;
+            mipRecommendModel.Recommender = recommender;
+            // customer id is first in external id list
+            mipRecommendModel.ExternalIds = new List<string>();
+            mipRecommendModel.ExternalIds.Add(customerId);
+            mipRecommendModel.ExternalIds.AddRange(externalIds);
+
+            mipRecommendModel.Number = maxCount;
+            mipRecommendModel.Tags = new List<string>();
+
+            HttpClient client = _backendService.GetConfiguredClient();
+            var jsonData = JsonConvert.SerializeObject(mipRecommendModel);
+            HttpContent content = new StringContent(jsonData);
+            SannsynRecommendModel model = _backendService.GetResult<SannsynRecommendModel>(serviceUrl, client, content);
+
+            return model.Result;
+        }
+
+
     }
 }

@@ -105,7 +105,10 @@ namespace Sannsyn.Episerver.Commerce.Backend
 
             if (_configuration.LogSendData && _log.IsDebugEnabled())
             {
-                _log.Debug("Sent to Sannsyn. Result: {0} - {1}", response.StatusCode, response.ReasonPhrase);
+                _log.Debug("GET '{0}': Result: {1} - {2}", 
+                    serviceUrl.ToString(), 
+                    (int)response.StatusCode, 
+                    response.ReasonPhrase);
             }
 
             return response;
@@ -115,14 +118,17 @@ namespace Sannsyn.Episerver.Commerce.Backend
         {
             if (_configuration.LogSendData && _log.IsDebugEnabled())
             {
-                _log.Debug("HttpContent: {0}", content.ReadAsStringAsync().Result);
+                _log.Debug("PUT data: {0}", content.ReadAsStringAsync().Result);
             }
 
             HttpResponseMessage response = client.PutAsync(serviceUrl, content).Result; ;
 
             if (_configuration.LogSendData && _log.IsDebugEnabled())
             {
-                _log.Debug("Sent to Sannsyn. Result: {0} - {1}", response.StatusCode, response.ReasonPhrase);
+                _log.Debug("PUT to '{0}': Result: {1} - {2}", 
+                    serviceUrl.ToString(), 
+                    (int)response.StatusCode, 
+                    response.ReasonPhrase);
             }
 
             return response;
