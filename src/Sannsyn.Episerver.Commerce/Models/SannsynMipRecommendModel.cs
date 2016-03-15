@@ -11,9 +11,6 @@ namespace Sannsyn.Episerver.Commerce.Models
         [JsonProperty(PropertyName = "recommender")]
         public string Recommender { get; set; }
 
-        [JsonProperty(PropertyName = "mainID")]
-        public string MainID { get; set; }
-
         [JsonProperty(PropertyName = "externalIds")]
         public List<string> ExternalIds { get; set; }
 

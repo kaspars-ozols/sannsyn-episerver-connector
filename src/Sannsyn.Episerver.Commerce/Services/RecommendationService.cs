@@ -47,8 +47,11 @@ namespace Sannsyn.Episerver.Commerce.Services
             SannsynMipRecommendModel mipRecommendModel = new SannsynMipRecommendModel();
             mipRecommendModel.Service = _configuration.Service;
             mipRecommendModel.Recommender = recommender;
-            mipRecommendModel.MainID = customerId;
-            mipRecommendModel.ExternalIds = categories;
+            // customer id is first in external id list, category number two
+            mipRecommendModel.ExternalIds = new List<string>();
+            mipRecommendModel.ExternalIds.Add(customerId);
+            mipRecommendModel.ExternalIds.AddRange(categories);
+
             mipRecommendModel.Number = maxCount;
             mipRecommendModel.Tags = new List<string>();
           
