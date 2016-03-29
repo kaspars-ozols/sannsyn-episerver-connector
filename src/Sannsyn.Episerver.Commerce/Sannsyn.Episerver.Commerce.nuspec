@@ -17,8 +17,8 @@
     <files>
         <file src="sannsyn\**\*.*" target="content\sannsyn\" />
         <!-- Configuration -->
-        <file src="web.config.install.xdt"
-              target="content" />
+        <!--<file src="web.config.install.xdt"
+              target="content" />-->
 
         <file src="bin\$configuration$\Sannsyn.Episerver.Commerce.dll"
               target="lib\net45\" />
