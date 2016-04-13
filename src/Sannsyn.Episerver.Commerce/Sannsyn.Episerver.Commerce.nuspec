@@ -15,7 +15,7 @@
         </dependencies>
     </metadata>
     <files>
-        <file src="sannsyn\**\*.*" target="content\modules\_protected\Sannsyn\" />
+        <file src="sannsyn\**\*.*" target="content\sannsyn\" />
         <!-- Configuration -->
         <!--<file src="web.config.install.xdt"
               target="content" />-->
