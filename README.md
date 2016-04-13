@@ -63,6 +63,40 @@ Use the Episerver Service Locator to get the implementation of these services, o
 ## Examples
 See the example project for the [Epic Photo demo site](https://github.com/BVNetwork/CommerceStarterKit/tree/sannsyn/src/CommerceStarterKit.Sannsyn) for uses of the API and how to convert the results from the API to Episerver Commerce products.
 
+Example on how to use the RecommendationService:
+```C#
+public class SannsynRecommendedProductsService
+{
+    private readonly IRecommendationService _recommendationService;
+    private readonly ReferenceConverter _referenceConverter;
+    private readonly IContentRepository _contentRepository;
+
+	public SannsynRecommendedProductsService(IRecommendationService recommendationService, ReferenceConverter referenceConverter, IContentRepository contentRepository)
+	{
+	    _recommendationService = recommendationService;
+	    _referenceConverter = referenceConverter;
+	    _contentRepository = contentRepository;
+	}
+	
+	public IEnumerable<IContent> GetRecommendedProducts(EntryContentBase catalogEntry, int maxCount)
+	{
+		// When looking at one product, get recommendations for other products
+		// Note, this does not take into account the current user
+	    var recommendationsForProduct = _recommendationService.GetRecommendationsForProduct(catalogEntry.Code, maxCount);
+	
+	    List<ContentReference> links = new List<ContentReference>();
+	    foreach (string code in recommendationsForProduct)
+	    {
+	        links.Add(_referenceConverter.GetContentLink(code, CatalogContentType.CatalogEntry));
+	    }
+	
+	    return _contentRepository.GetItems(links, catalogEntry.Language);
+	}
+}
+
+```
+
+
 ----------
 (C) 2016 Sannsyn AS
 http://www.sannsyn.com
