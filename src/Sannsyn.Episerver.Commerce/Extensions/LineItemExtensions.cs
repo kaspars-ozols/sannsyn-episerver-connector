@@ -1,5 +1,6 @@
 ﻿using EPiServer;
 using EPiServer.Commerce.Catalog.ContentTypes;
+using EPiServer.Core;
 using EPiServer.ServiceLocation;
 using EPiServer.Web.Routing;
 using Mediachase.Commerce;
@@ -31,11 +32,22 @@ namespace Sannsyn.Episerver.Commerce.Extensions
 		/// </summary>
 		/// <typeparam name="T"></typeparam>
 		/// <param name="code">The code.</param>
-		/// <returns></returns>
+		/// <returns>The Entry if found, null if not</returns>
 		private static T GetEntryContent<T>(string code) where T : EntryContentBase
 		{
-			return ContentLoader.Service.Get<T>(ReferenceConverter.Service.GetContentLink(code, CatalogContentType.CatalogEntry));
-		}
+		    var contentLink = ReferenceConverter.Service.GetContentLink(code, CatalogContentType.CatalogEntry);
+            if(ContentReference.IsNullOrEmpty(contentLink))
+            {
+                return null;
+            }
 
+		    T entry;
+            bool result = ContentLoader.Service.TryGet(contentLink, out entry);
+            if(result)
+            {
+                return entry;
+            }
+		    return null;
+		}
     }
 }

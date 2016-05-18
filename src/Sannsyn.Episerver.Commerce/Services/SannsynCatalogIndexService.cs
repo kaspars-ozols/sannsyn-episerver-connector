@@ -55,36 +55,43 @@ namespace Sannsyn.Episerver.Commerce.Services
         public virtual int IndexProductsWithCategories()
         {
             int numberOfProductsSentToSannsyn = 0;
-            IEnumerable<ContentReference> contentLinks = _contentLoader.GetDescendents(GetCatalogRoot());
 
-            var availableLocalizations = GetAvailableLocalizations();
-
-            foreach (CultureInfo culture in availableLocalizations)
+            // Get all catalogs to index
+            var catalogRoots = GetCatalogRoots();
+            foreach (var catalogRoot in catalogRoots)
             {
-                int allContentsCount = contentLinks.Count();
-                for (var i = 0; i < allContentsCount; i += _bulkSize)
+                _logger.Debug("Indexing products in catalog: {0}", catalogRoot.ToString());
+
+                IEnumerable<ContentReference> contentLinks = _contentLoader.GetDescendents(catalogRoot);
+
+                var availableLocalizations = GetAvailableLocalizations();
+
+                foreach (CultureInfo culture in availableLocalizations)
                 {
-                    IEnumerable<EntryContentBase> products = GetEntriesToIndex(_bulkSize, contentLinks, culture, i);
+                    int allContentsCount = contentLinks.Count();
+                    for (var i = 0; i < allContentsCount; i += _bulkSize)
+                    {
+                        IEnumerable<EntryContentBase> products = GetEntriesToIndex(_bulkSize, contentLinks, culture, i);
 
-                    // First get indexable content items
-                    Dictionary<string, EntryContentBase> indexableContentItems = GetIndexableContentItems(products);
+                        // First get indexable content items
+                        Dictionary<string, EntryContentBase> indexableContentItems = GetIndexableContentItems(products);
 
-                    // Get models Sannsyn can index
-                    List<SannsynUpdateEntityModel> sannsynObjects = GetUpdateModels(indexableContentItems);
+                        // Get models Sannsyn can index
+                        List<SannsynUpdateEntityModel> sannsynObjects = GetUpdateModels(indexableContentItems);
 
-                    numberOfProductsSentToSannsyn = numberOfProductsSentToSannsyn + sannsynObjects.Count;
+                        numberOfProductsSentToSannsyn = numberOfProductsSentToSannsyn + sannsynObjects.Count;
 
-                    _logger.Debug("Sending {0} entries to Sannsyn index", sannsynObjects.Count);
+                        _logger.Debug("Sending {0} entries to Sannsyn index", sannsynObjects.Count);
 
-                    SannsynUpdateModel sannsynModel = new SannsynUpdateModel();
-                    sannsynModel.Service = _configuration.Service;
-                    sannsynModel.Updates = sannsynObjects;
-                    _sannsynUpdateService.SendToSannsyn(sannsynModel);
+                        SannsynUpdateModel sannsynModel = new SannsynUpdateModel();
+                        sannsynModel.Service = _configuration.Service;
+                        sannsynModel.Updates = sannsynObjects;
+                        _sannsynUpdateService.SendToSannsyn(sannsynModel);
+                    }
                 }
+
+                _logger.Debug("Done sending {0} entries to Sannsyn index", numberOfProductsSentToSannsyn);
             }
-
-            _logger.Debug("Done sending {0} entries to Sannsyn index", numberOfProductsSentToSannsyn);
-
             return numberOfProductsSentToSannsyn;
         }
 
@@ -162,6 +169,18 @@ namespace Sannsyn.Episerver.Commerce.Services
             }
 
             return ContentReference.EmptyReference;
+        }
+
+        protected List<ContentReference> GetCatalogRoots()
+        {
+            List<ContentReference> catalogLinks = new List<ContentReference>();
+            var ids = GetCatalogIds().ToList();
+            foreach (int id in ids)
+            {
+                catalogLinks.Add(_referenceConverter.GetContentLink(id, CatalogContentType.Catalog, 0));
+            }
+
+            return catalogLinks;
         }
 
         private IEnumerable<int> GetCatalogIds()

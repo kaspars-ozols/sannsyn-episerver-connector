@@ -64,13 +64,21 @@ namespace Sannsyn.Episerver.Commerce.Services
             List<SannsynUpdateEntityModel> sannsynObjects = new List<SannsynUpdateEntityModel>();
             foreach (LineItem lineItem in lineItems)
             {
-                sannsynObjects.Add(CreateSannsynObject(lineItem, orderGroup.CustomerId));
+                SannsynUpdateEntityModel model = CreateSannsynObject(lineItem, orderGroup.CustomerId);
+                if(model != null)
+                {
+                    sannsynObjects.Add(model);
+                }
             }
 
-            SannsynUpdateModel sannsynModel = new SannsynUpdateModel();
-            sannsynModel.Service = _configuration.Service;
-            sannsynModel.Updates = sannsynObjects;
-            _sannsynUpdateService.SendToSannsyn(sannsynModel);
+            // Make sure we have something to index
+            if(sannsynObjects.Any())
+            {
+                SannsynUpdateModel sannsynModel = new SannsynUpdateModel();
+                sannsynModel.Service = _configuration.Service;
+                sannsynModel.Updates = sannsynObjects;
+                _sannsynUpdateService.SendToSannsyn(sannsynModel);
+            }
         }
 
        
@@ -84,6 +92,11 @@ namespace Sannsyn.Episerver.Commerce.Services
         private SannsynUpdateEntityModel CreateSannsynObject(LineItem lineItem, Guid customerId)
         {
             var entry = lineItem.GetEntryContent<EntryContentBase>();
+            if (entry == null)
+            {
+                // Entry could have been deleted after order was placed
+                return null;
+            } 
             var parent = entry.GetParent();
             string code = parent == null ? entry.Code : parent.Code;
 
