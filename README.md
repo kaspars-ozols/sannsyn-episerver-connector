@@ -33,14 +33,14 @@ Add the connection string to the `<connectionStrings>` section in web.config alo
 <connectionStrings>
 	...
   	<add name="SannsynConnection"
-		 connectionString="Service Url=http://customername.sannsyn.com/;Service=servicename;User Name=username;Password=password"
+		 connectionString="Service Url=https://customername.sannsyn.com/;Service=servicename;User Name=username;Password=password"
 		 providerName="Custom" />
 	...
 </connectionStrings>
 ```
 # Getting Started
  1. Install the module from the package manager console: `Install-Package sannsyn.episerver.commerce`
- 1. Configure the connection string as shown above
+ 1. Configure the connection string as shown above. Please note that HTTPS is required to access the Sannsyn servers.
  1. Open the site, go to edit mode and look for the Sannsyn menu in the top navigation:
  ![Sannsyn Plugin Overview](https://raw.githubusercontent.com/BVNetwork/sannsyn-episerver-connector/master/doc/img/screenshot-overview.png?token=AGIDqHr9tWw59RMkY_wYG4TeZQUFIMwVks5XF3lfwA%3D%3D)
  1. See the Admin menu for tools to index the catalog and existing orders:
@@ -114,4 +114,4 @@ public class SannsynRecommendedProductsService
 
 ----------
 (C) 2016 Sannsyn AS
-http://www.sannsyn.com
+https://www.sannsyn.com
