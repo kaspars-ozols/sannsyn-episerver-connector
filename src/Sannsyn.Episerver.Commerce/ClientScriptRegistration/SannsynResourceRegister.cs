@@ -17,28 +17,30 @@ namespace Sannsyn.Episerver.Commerce.ClientScriptRegistration
 
         public void RegisterResources(IRequiredClientResourceList requiredResources, HttpContextBase context)
         {
-            PageRouteHelper instance = ServiceLocator.Current.GetInstance<PageRouteHelper>();
-            if (instance.Content != null)
+            SannsynConfiguration config = ServiceLocator.Current.GetInstance<SannsynConfiguration>();
+            if (config.ModuleEnabled)
             {
-                var content = instance.Content;
-                if(content is EntryContentBase)
+                PageRouteHelper instance = ServiceLocator.Current.GetInstance<PageRouteHelper>();
+                if (instance.Content != null)
                 {
+                    var content = instance.Content;
+                    if (content is EntryContentBase)
+                    {
+                        var userId = EPiServer.Security.PrincipalInfo.CurrentPrincipal.GetContactId();
+                        EntryContentBase entry = content as EntryContentBase;
+                        string productCode = entry.Code;
+                        List<string> parentCategories = entry.GetParentCategoryCodes(entry.Language.Name);
 
-                    var userId = EPiServer.Security.PrincipalInfo.CurrentPrincipal.GetContactId();
-                    EntryContentBase entry = content as EntryContentBase;
-                    string productCode = entry.Code;
-                    List<string> parentCategories = entry.GetParentCategoryCodes(entry.Language.Name);
-                   
-                    string sannsynClickUrl = GenerateClickUrl(userId, productCode, parentCategories);
-                    ClientResources.RequireScript(sannsynClickUrl);
+                        string sannsynClickUrl = GenerateClickUrl(userId, productCode, parentCategories);
+                        ClientResources.RequireScript(sannsynClickUrl);
+                    }
                 }
             }
         }
 
         private string GenerateClickUrl(Guid userId, string productCode, List<string> parentCategories)
         {
-            SannsynConfiguration config =
-                ServiceLocator.Current.GetInstance<SannsynConfiguration>();
+            SannsynConfiguration config = ServiceLocator.Current.GetInstance<SannsynConfiguration>();
 
             //Example url:
             // http://episerver.sannsyn.com/jsrecapi/1.0/tupleupdate/epicphoto/admin/canon-5d-m3/click/photo/catclick/dslr/catclick
@@ -47,7 +49,7 @@ namespace Sannsyn.Episerver.Commerce.ClientScriptRegistration
             string clickUrl = string.Format("{0}/{1}/{2}/click", serviceUrl, userId, productCode);
             foreach (string category in parentCategories)
             {
-                clickUrl = string.Format("{0}/{1}/catclick", clickUrl,category);
+                clickUrl = string.Format("{0}/{1}/catclick", clickUrl, category);
             }
             return clickUrl;
         }

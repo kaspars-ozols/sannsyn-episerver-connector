@@ -16,37 +16,39 @@ namespace Sannsyn.Episerver.Commerce.Configuration
 
         public SannsynConfiguration()
         {
-            ConnectionStringSettings connectionString = ConfigurationManager.ConnectionStrings["SannsynConnection"];
-            if (connectionString == null)
-            {
-                throw new ConfigurationErrorsException("Missing Sannsyn connection string" );
-            }
-
-            _builder = new DbConnectionStringBuilder(false);
-            _builder.ConnectionString = connectionString.ConnectionString;
-
-            string url = _builder["Service Url"].ToString();
-            if(string.IsNullOrEmpty(url))
-            {
-                throw new ConfigurationErrorsException("Missing service url in Sannsyn connection string");
-            }
-
-            if (url.EndsWith("/") == false)
-                url = url + "/";
-
-            _serviceUrl = new Uri(url);
-
-            if (_builder.ContainsKey("Configuration"))
-            {
-                _configuration = _builder["Configuration"].ToString();
-            }
-
-            var sendDataFlag = ConfigurationManager.AppSettings["Sannsyn:LogSendData"];
-            bool.TryParse(sendDataFlag, out _logSendData);
-
             var moduleDisabled = ConfigurationManager.AppSettings["Sannsyn:DisableModule"];
             bool.TryParse(moduleDisabled, out _moduleDisabled);
 
+            // if module is disabled, we won't attempt the connection string
+            if(_moduleDisabled == false)
+            {
+                ConnectionStringSettings connectionString = ConfigurationManager.ConnectionStrings["SannsynConnection"];
+                if (connectionString == null)
+                {
+                    throw new ConfigurationErrorsException("Missing Sannsyn connection string" );
+                }
+
+                _builder = new DbConnectionStringBuilder(false);
+                _builder.ConnectionString = connectionString.ConnectionString;
+
+                string url = _builder["Service Url"].ToString();
+                if(string.IsNullOrEmpty(url))
+                {
+                    throw new ConfigurationErrorsException("Missing service url in Sannsyn connection string");
+                }
+
+                if (url.EndsWith("/") == false)
+                    url = url + "/";
+
+                _serviceUrl = new Uri(url);
+
+                if (_builder.ContainsKey("Configuration"))
+                {
+                    _configuration = _builder["Configuration"].ToString();
+                }
+            }
+            var sendDataFlag = ConfigurationManager.AppSettings["Sannsyn:LogSendData"];
+            bool.TryParse(sendDataFlag, out _logSendData);
 
         }
 
