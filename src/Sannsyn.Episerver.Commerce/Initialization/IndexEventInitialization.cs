@@ -4,6 +4,7 @@ using EPiServer.Framework.Initialization;
 using EPiServer.Logging;
 using EPiServer.ServiceLocation;
 using Mediachase.Commerce.Orders;
+using Sannsyn.Episerver.Commerce.Configuration;
 using Sannsyn.Episerver.Commerce.Models;
 using Sannsyn.Episerver.Commerce.Services;
 
@@ -15,9 +16,12 @@ namespace Sannsyn.Episerver.Commerce.Initialization
         private ILogger _log = LogManager.GetLogger();
         public void Initialize(InitializationEngine context)
         {
-            OrderContext.Current.OrderGroupUpdated += Current_OrderGroupUpdated;
+            SannsynConfiguration sannsynConfiguration = ServiceLocator.Current.GetInstance<SannsynConfiguration>();
+            if (sannsynConfiguration.ModuleEnabled)
+            {
+                OrderContext.Current.OrderGroupUpdated += Current_OrderGroupUpdated;
+            }
         }
-
 
         private void Current_OrderGroupUpdated(object sender, OrderGroupEventArgs e)
         {

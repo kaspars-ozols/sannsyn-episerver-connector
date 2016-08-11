@@ -8,6 +8,7 @@ using EPiServer.Logging;
 using EPiServer.Security;
 using EPiServer.ServiceLocation;
 using Mediachase.Commerce.Security;
+using Sannsyn.Episerver.Commerce.Configuration;
 using Sannsyn.Episerver.Commerce.Services;
 
 namespace Sannsyn.Episerver.Commerce.Initialization
@@ -36,13 +37,17 @@ namespace Sannsyn.Episerver.Commerce.Initialization
 
         public void InitializeHttpEvents(HttpApplication application)
         {
-            for (int i = 0; i < application.Modules.Count; i++)
+            SannsynConfiguration sannsynConfiguration = ServiceLocator.Current.GetInstance<SannsynConfiguration>();
+            if (sannsynConfiguration.ModuleEnabled)
             {
-                ProfileModule module = application.Modules[i] as ProfileModule;
-                if (module != null)
+                for (int i = 0; i < application.Modules.Count; i++)
                 {
-                    module.MigrateAnonymous += OnMigrateAnonymous;
-                    _log.Debug("Initializing Anonymous Migration Module");
+                    ProfileModule module = application.Modules[i] as ProfileModule;
+                    if (module != null)
+                    {
+                        module.MigrateAnonymous += OnMigrateAnonymous;
+                        _log.Debug("Initializing Anonymous Migration Module");
+                    }
                 }
             }
         }
