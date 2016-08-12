@@ -23,6 +23,10 @@ namespace Sannsyn.Episerver.Commerce.ClientScriptRegistration
                 PageRouteHelper instance = ServiceLocator.Current.GetInstance<PageRouteHelper>();
                 if (instance.Content != null)
                 {
+                    // Add Crec on all Content
+                    ClientResources.RequireScript(GenerateCrecUrl());
+
+                    // Click url is only for product / variant content
                     var content = instance.Content;
                     if (content is EntryContentBase)
                     {
@@ -52,6 +56,23 @@ namespace Sannsyn.Episerver.Commerce.ClientScriptRegistration
                 clickUrl = string.Format("{0}/{1}/catclick", clickUrl, category);
             }
             return clickUrl;
+        }
+
+        /// <summary>
+        /// Generates the customer recognition url
+        /// </summary>
+        /// <param name="userId"></param>
+        /// <param name="productCode"></param>
+        /// <param name="parentCategories"></param>
+        /// <returns></returns>
+        private string GenerateCrecUrl()
+        {
+            SannsynConfiguration config = ServiceLocator.Current.GetInstance<SannsynConfiguration>();
+            
+            //Example url:
+            // <script type="application/javascript" src="https://episerver.sannsyn.com/jsrecapi/1.0/crec"></script>
+            string serviceUrl = config.ServiceUrl + "jsrecapi/1.0/crec";
+            return serviceUrl;
         }
     }
 }
