@@ -5,7 +5,7 @@
         <version>$version$</version>
         <owners>Sannsyn AS</owners>
         <authors>Sannsyn</authors>
-        <projectUrl>https://github.com/sannsyn/episerver-commerce</projectUrl>
+        <projectUrl>https://github.com/sannsyn/sannsyn-episerver-connector</projectUrl>
         <requireLicenseAcceptance>false</requireLicenseAcceptance>
         <description>Integration between Sannsyn Recommender and Episerver Commerce</description>
         <summary></summary>
