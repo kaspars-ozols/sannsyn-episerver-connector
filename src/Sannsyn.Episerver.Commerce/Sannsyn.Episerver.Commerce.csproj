@@ -252,6 +252,7 @@
     <Compile Include="Admin\SannsynAdminController.cs" />
     <Compile Include="Admin\SannsynOverviewController.cs" />
     <Compile Include="Backend\BackendService.cs" />
+    <Compile Include="Tracking\ExposedRecommendationsScript.cs" />
     <Compile Include="Constants.cs" />
     <Compile Include="Extensions\LineItemExtensions.cs" />
     <Compile Include="Initialization\MigrateAnonymousInitialization.cs" />
@@ -271,8 +272,11 @@
     <Compile Include="Models\SannsynUpdateEntityModel.cs" />
     <Compile Include="Models\ViewModels\SannsynAdminViewModel.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Services\IRecommendations.cs" />
     <Compile Include="Services\ISannsynAdminService.cs" />
     <Compile Include="Services\ISannsynUpdateService.cs" />
+    <Compile Include="Services\ITrackedRecommendationService.cs" />
+    <Compile Include="Services\Recommendations.cs" />
     <Compile Include="Services\SannsynCatalogIndexService.cs" />
     <Compile Include="Services\CustomerService.cs" />
     <Compile Include="Services\ISannsynCatalogIndexService.cs" />
@@ -283,6 +287,10 @@
     <Compile Include="Services\SannsynOrderIndexerService.cs" />
     <Compile Include="Services\SannsynAdminService.cs" />
     <Compile Include="Services\SannsynUpdateService.cs" />
+    <Compile Include="Tracking\ExposureTracker.cs" />
+    <Compile Include="Tracking\ITrackedRecommendation.cs" />
+    <Compile Include="Tracking\TrackedRecommendation.cs" />
+    <Compile Include="Tracking\TrackingExtensions.cs" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="module.config">

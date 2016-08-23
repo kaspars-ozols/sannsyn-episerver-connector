@@ -2,8 +2,10 @@
 using System.Collections.Generic;
 using System.Web;
 using EPiServer.Commerce.Catalog.ContentTypes;
+using EPiServer.Core;
 using EPiServer.Framework.Web.Resources;
 using EPiServer.ServiceLocation;
+using EPiServer.Web;
 using EPiServer.Web.Routing;
 using Mediachase.Commerce.Security;
 using Sannsyn.Episerver.Commerce.Configuration;
@@ -14,7 +16,6 @@ namespace Sannsyn.Episerver.Commerce.ClientScriptRegistration
     [ClientResourceRegister]
     public class SannsynResourceRegister : IClientResourceRegister
     {
-
         public void RegisterResources(IRequiredClientResourceList requiredResources, HttpContextBase context)
         {
             SannsynConfiguration config = ServiceLocator.Current.GetInstance<SannsynConfiguration>();
@@ -24,7 +25,7 @@ namespace Sannsyn.Episerver.Commerce.ClientScriptRegistration
                 if (instance.Content != null)
                 {
                     // Add Crec on all Content
-                    ClientResources.RequireScript(GenerateCrecUrl());
+                    requiredResources.RequireScript(GenerateCrecUrl(), "SannsynCrec", null).AtHeader();
 
                     // Click url is only for product / variant content
                     var content = instance.Content;
@@ -68,7 +69,7 @@ namespace Sannsyn.Episerver.Commerce.ClientScriptRegistration
         private string GenerateCrecUrl()
         {
             SannsynConfiguration config = ServiceLocator.Current.GetInstance<SannsynConfiguration>();
-            
+
             //Example url:
             // <script type="application/javascript" src="https://episerver.sannsyn.com/jsrecapi/1.0/crec"></script>
             string serviceUrl = config.ServiceUrl + "jsrecapi/1.0/crec";

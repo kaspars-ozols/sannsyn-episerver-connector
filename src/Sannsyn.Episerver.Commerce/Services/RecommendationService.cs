@@ -11,7 +11,8 @@ using Sannsyn.Episerver.Commerce.Models;
 namespace Sannsyn.Episerver.Commerce.Services
 {
     [ServiceConfiguration(typeof(IRecommendationService))]
-    public class RecommendationService : IRecommendationService
+    [ServiceConfiguration(typeof(ITrackedRecommendationService))]
+    public class RecommendationService : IRecommendationService, ITrackedRecommendationService
     {
         private readonly BackendService _backendService;
         private readonly SannsynConfiguration _configuration;
@@ -40,11 +41,11 @@ namespace Sannsyn.Episerver.Commerce.Services
 
         }
 
-        public IEnumerable<string> GetRecommendationsForCustomerByCategory(string customerId,List<string> categories, int maxCount = 10)
+        IRecommendations ITrackedRecommendationService.GetRecommendationsForCustomer(string customerId, int maxCount)
         {
-            return MipRecommend(customerId, categories, maxCount, Constants.Recommenders.UserItemCategoryClickBuy);
+            IRecommendations recommendations = new Recommendations(Constants.Recommenders.UserItemClickBuy, GetRecommendationsForCustomer(customerId, maxCount));
+            return recommendations;
         }
-
 
         /// <summary>
         /// Get recommended products for a given product
@@ -62,6 +63,13 @@ namespace Sannsyn.Episerver.Commerce.Services
             return model.Result;
         }
 
+        IRecommendations ITrackedRecommendationService.GetRecommendationsForProduct(string productCode, int maxCount)
+        {
+            Recommendations recommendations = new Recommendations(Constants.Recommenders.ItemItemClickBuy,
+                GetRecommendationsForProduct(productCode, maxCount));
+            return recommendations;
+        }
+
         /// <summary>
         /// Get recommended products based on what a customer has in the cart
         /// </summary>
@@ -73,6 +81,26 @@ namespace Sannsyn.Episerver.Commerce.Services
         {
             return MipRecommend(customerId, productCodes, maxCount, Constants.Recommenders.CartItemsRecommender);
         }
+
+        IRecommendations ITrackedRecommendationService.GetRecommendationsForCart(string customerId, IEnumerable<string> productCodes, int maxCount)
+        {
+            IRecommendations recommendations = new Recommendations(Constants.Recommenders.CartItemsRecommender,
+                GetRecommendationsForCart(customerId, productCodes, maxCount));
+            return recommendations;
+        }
+
+        public IEnumerable<string> GetRecommendationsForCustomerByCategory(string customerId,List<string> categories, int maxCount = 10)
+        {
+            return MipRecommend(customerId, categories, maxCount, Constants.Recommenders.UserItemCategoryClickBuy);
+        }
+
+        IRecommendations ITrackedRecommendationService.GetRecommendationsForCustomerByCategory(string customerId, List<string> categories, int maxCount)
+        {
+            IRecommendations recommendations = new Recommendations(Constants.Recommenders.UserItemCategoryClickBuy,
+                GetRecommendationsForCustomerByCategory(customerId, categories, maxCount));
+            return recommendations;
+        }
+
 
         public Dictionary<string,double> GetScoreForItems(int maxCount = 10000)
         {
