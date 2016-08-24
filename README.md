@@ -110,6 +110,62 @@ public class SannsynRecommendedProductsService
 }
 
 ```
+## Tracking
+
+### Recommended Product Exposure
+While the module will automatically track product detail views, it is also important to track product exposures, typically that a product has been shown in a list of some sort. This is done from the client side, but the module has server side methods to help you register which products have been shown.
+
+How to track product recommendation exposures using the AddRecommendationExposure HttpContextBase extension method (Note! only relevant code shown):
+```C#
+using Sannsyn.Episerver.Commerce.Services;
+using Sannsyn.Episerver.Commerce.Tracking;
+...
+
+public class RecommendedProductsBlockController : BlockController<RecommendedProductsBlock>
+{
+	...
+	public RecommendedProductsBlockController(ITrackedRecommendationService trackedRecommendationService,
+	            ICurrentCustomerService currentCustomerService,
+	            ICurrentMarket currentMarket,
+	            ProductService productService,
+	            IContentLoader contentLoader)
+    {
+        _trackedRecommendationService = trackedRecommendationService;
+        _currentCustomerService = currentCustomerService;
+        _currentMarket = currentMarket;
+        _productService = productService;
+        _contentLoader = contentLoader;
+    }
+
+	public override ActionResult Index(...)
+	{
+		...
+		ITrackedRecommendationService trackedRecommendationService = 
+		var recommendedProducts = _trackedRecommendationService.GetRecommendedProducts(_currentCustomerService.GetCurrentUserId(), 3, currentCulture);
+		...
+		ControllerContext.HttpContext.AddRecommendationExposure(new TrackedRecommendation() { ProductCode = model.Code, RecommenderName = recommendedProducts.RecommenderName });
+	}
+}
+```
+The AddRecommendationExposure method will register the product code along with the recommender name in the HttpContext Items collection. You can add several products using the same or different recommenders.
+
+The actual tracking is done by the Sannsyn client script, and only when the products are shown for the user (visible in the browser during scrolling). In order for Sannsyn to recognize that the product has scrolled into view, the markup must be decorated with the name of the recommender and the product code as the CSS class name. See https://episerver.sannsyn.com/recapi/1.0/docs#h2treaui for more information.
+
+Use the `ITrackedRecommendationService` to return an `IRecommendations` that has a list of product codes in addition to the recommender name in order to generate the CSS class name to use in your markup.
+
+Example markup:
+```HTML
+<div class="col-md-4 UserItemClickBuy_canon-ef-16-35-f4-is-usm">
+	...
+</div>
+``` 
+
+The final step to track exposures is to include the Javascript that reports exposures back to Sannsyn. Add the following to the bottom of your layout file:
+```HTML
+@Html.TrackSannsynProductExposures()
+```
+
+**Note!** The module will add an include for the `jsrecapi` Javascript in the header automatically (see [the documentation](https://episerver.sannsyn.com/recapi/1.0/docs#h2cr) for more information).
 
 
 ----------
