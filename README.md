@@ -54,11 +54,12 @@ The connector wraps several of the availble recommendation services in the Sanns
 Use the Episerver Service Locator to get the implementation of these services, or register your own override in order to customize the behaviour.
 
  1. `IRecommendationService` - the main service to use for product recommendations
+ 1. `ITrackedRecommendationService` - same as the IRecommendationService but with more information in order to add client side tracking to recommendations
  1. `ICustomerService` - Availble for customization. Used to get the customer id and to migrate from anonymous to known users
  1. `ISannsynAdminService` - Used by the admin tools.
- 2. `ISannsynCatalogIndexService` - The default implementation of the catalog indexer. Can be customized.
- 3. `ISannsynOrderIndexerService` - The default implementation of the order indexer. You might want to change the GetOrders method in order to control which orders are sent to Sannsyn.
- 4. `ISannsynUpdateService` - Service being used to send data to Sannsyn. Can be customized.
+ 1. `ISannsynCatalogIndexService` - The default implementation of the catalog indexer. Can be customized.
+ 1. `ISannsynOrderIndexerService` - The default implementation of the order indexer. You might want to change the GetOrders method in order to control which orders are sent to Sannsyn.
+ 1. `ISannsynUpdateService` - Service being used to send data to Sannsyn. Can be customized.
 
 ##  Admin
 There are two important commands in the Sannsyn admin:
@@ -110,6 +111,7 @@ public class SannsynRecommendedProductsService
 }
 
 ```
+
 ## Tracking
 
 ### Recommended Product Exposure
