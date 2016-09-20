@@ -153,9 +153,15 @@ The AddRecommendationExposure method will register the product code along with t
 
 The actual tracking is done by the Sannsyn client script, and only when the products are shown for the user (visible in the browser during scrolling). In order for Sannsyn to recognize that the product has scrolled into view, the markup must be decorated with the name of the recommender and the product code as the CSS class name. See https://episerver.sannsyn.com/recapi/1.0/docs#h2treaui for more information.
 
-Use the `ITrackedRecommendationService` to return an `IRecommendations` that has a list of product codes in addition to the recommender name in order to generate the CSS class name to use in your markup.
+Use the `ITrackedRecommendationService` to return an `IRecommendations` that has a list of product codes in addition to the recommender name in order to generate the CSS class name to use in your markup. You are responsible for getting the recommender name and product codes to the view (typically by adding them to the model).
 
-Example markup:
+Example MVC markup:
+```HTML
+<div class="col-md-4 @Model.GetTrackingName(product)">
+    @Html.Partial("ProductPartials/_ProductListView", product)
+</div>
+```
+Could render this:
 ```HTML
 <div class="col-md-4 UserItemClickBuy_canon-ef-16-35-f4-is-usm">
 	...
@@ -169,6 +175,18 @@ The final step to track exposures is to include the Javascript that reports expo
 
 **Note!** The module will add an include for the `jsrecapi` Javascript in the header automatically (see [the documentation](https://episerver.sannsyn.com/recapi/1.0/docs#h2cr) for more information).
 
+### Product Exposure Click
+Just as the product exposure needs to be tracked, clicking a link or image that is part of the exposure is also important in order to know if the exposure was successful or not.
+
+```HTML
+<a href="..." onclick="ssas_click('service', 'customer id', 'UserItemClickBuy_canon-ef-16-35-f4-is-usm')">More product information</a>
+```
+
+The last part of the onclick event is the recommender name and product code. You'll already have this from the exposure tracking. 
+
+The `service` is the `SannsynConfiguration.Service` property (use the Service Locator to get a SannsynConfiguration instance.) 
+
+Get the `customer id` from `EPiServer.Security.PrincipalInfo.CurrentPrincipal.GetContactId()`
 
 ----------
 (C) 2016 Sannsyn AS

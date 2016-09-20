@@ -13,6 +13,7 @@ namespace Sannsyn.Episerver.Commerce.Configuration
         private bool _logSendData = false;
         private bool _moduleDisabled = false;
         private string _configuration = "episerver";
+        private int _scriptTimeout = 1500;
 
         public SannsynConfiguration()
         {
@@ -46,6 +47,13 @@ namespace Sannsyn.Episerver.Commerce.Configuration
                 {
                     _configuration = _builder["Configuration"].ToString();
                 }
+
+                var scriptTimeoutString = ConfigurationManager.AppSettings["Sannsyn:ScriptTimeout"];
+                if(string.IsNullOrEmpty(scriptTimeoutString) == false)
+                {
+                    int.TryParse(scriptTimeoutString, out _scriptTimeout);
+                }
+
             }
             var sendDataFlag = ConfigurationManager.AppSettings["Sannsyn:LogSendData"];
             bool.TryParse(sendDataFlag, out _logSendData);
@@ -70,6 +78,16 @@ namespace Sannsyn.Episerver.Commerce.Configuration
         {
             get { return !_moduleDisabled; }
             private set { _moduleDisabled = !value; }
+        }
+
+        /// <summary>
+        /// The time in milliseconds to wait for the Crec script to load
+        /// from the Sannsyn servers.
+        /// </summary>
+        public int ScriptTimeout
+        {
+            get { return _scriptTimeout; }
+            set { _scriptTimeout = value; }
         }
     }
 }

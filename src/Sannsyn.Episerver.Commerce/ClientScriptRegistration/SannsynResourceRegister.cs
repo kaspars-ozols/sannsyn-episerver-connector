@@ -25,7 +25,8 @@ namespace Sannsyn.Episerver.Commerce.ClientScriptRegistration
                 if (instance.Content != null)
                 {
                     // Add Crec on all Content
-                    requiredResources.RequireScript(GenerateCrecUrl(), "SannsynCrec", null).AtHeader();
+                    // requiredResources.RequireScript(GenerateCrecUrl(), "SannsynCrec", null).AtHeader();
+                    requiredResources.RequireScriptInline(GenerateCrecScript(config), "SannsynCrecScript", null).AtHeader();
 
                     // Click url is only for product / variant content
                     var content = instance.Content;
@@ -75,5 +76,34 @@ namespace Sannsyn.Episerver.Commerce.ClientScriptRegistration
             string serviceUrl = config.ServiceUrl + "jsrecapi/1.0/crec";
             return serviceUrl;
         }
+
+        private string GenerateCrecScript(SannsynConfiguration config)
+        {
+            string script = @"
+    var crecReq = new XMLHttpRequest();
+    crecReq.withCredentials = true;
+    crecReq.timeout = " + config.ScriptTimeout + @"; // Timeout set in milliseconds
+    crecReq.open('GET', '" + config.ServiceUrl + @"jsrecapi/1.0/crec');
+    crecReq.setRequestHeader('x-ssasid', localStorage.ssasid);
+    crecReq.onreadystatechange = function() 
+    {
+        if (crecReq.readyState == XMLHttpRequest.DONE)
+        {
+            if (crecReq.status == 200 || crecReq.status == 304)
+            {
+                var script = document.createElement('SCRIPT');
+                var innerText = document.createTextNode(crecReq.responseText);
+                script.appendChild(innerText);
+                document.head.appendChild(script);
+                set_ssas_host('" + config.ServiceUrl.Host + @"');
+            }
+        }
+    }
+    crecReq.send();
+";
+            return script;
+        }
+
+
     }
 }
