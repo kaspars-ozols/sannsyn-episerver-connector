@@ -178,6 +178,7 @@ The final step to track exposures is to include the Javascript that reports expo
 ### Product Exposure Click
 Just as the product exposure needs to be tracked, clicking a link or image that is part of the exposure is also important in order to know if the exposure was successful or not.
 
+You can use the standard Sannsyn click handler like this:
 ```HTML
 <a href="..." onclick="ssas_click('service', 'customer id', 'UserItemClickBuy_canon-ef-16-35-f4-is-usm')">More product information</a>
 ```
@@ -187,6 +188,16 @@ The last part of the onclick event is the recommender name and product code. You
 The `service` is the `SannsynConfiguration.Service` property (use the Service Locator to get a SannsynConfiguration instance.) 
 
 Get the `customer id` from `EPiServer.Security.PrincipalInfo.CurrentPrincipal.GetContactId()`
+
+You can also use a simplified Javascript wrapper function (`trackRecClick`):
+```HTML
+<a href="/en/starterkit/photo/cameras/slr/canon-7d-m2/" onclick="trackRecClick('UserItemClickBuy_canon-7d-m2')">
+    <img src="/globalassets/catalogs/photo/cameras/7dmarkii/eos-7d-m2-1.jpg">
+</a>
+```
+It only requires the recommender name and the product code. Internally it calls the `ssas_click` method with the recommendation, service name and customer id. Since the service name and customer id usually do not change for the same page, they are stored in variables.
+
+**Note!** You need to call the `@Html.TrackSannsynProductExposures()` method in your layout and have at least one call to the `HttpContext.AddRecommendationExposure` method, or no script will be rendered. A recommendation click should always be accompanied with a tracked exposure.
 
 ----------
 (C) 2016 Sannsyn AS

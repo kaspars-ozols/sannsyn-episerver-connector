@@ -33,10 +33,13 @@ namespace Sannsyn.Episerver.Commerce.Tracking
             if (recommendations.Any() == false)
                 return null;
 
+            sb.AppendLine("var sannsynService = '" + config.Service + "';");
+            sb.AppendLine("var sannsynTrackedId = '" + customerService.GetCurrentUserId() + "';");
+
             string script = @"
-  function trackRecommendationExposure(recommendations, recommenderName, serviceName, customerId) {
+    function trackRecommendationExposure(recommendations, recommenderName) {
       var ouronscroll = function(){
-        ssas_track_visibility(recommendations, recommenderName, serviceName, customerId);
+        ssas_track_visibility(recommendations, recommenderName, sannsynService, sannsynTrackedId);
       };
       var oldonscroll = window.onscroll; // don't overwrite old onScroll method, (if it exists)
       if (oldonscroll != null) {
@@ -53,6 +56,11 @@ namespace Sannsyn.Episerver.Commerce.Tracking
       // finally, do an initial check for visibility, since onscroll could be never happening:
       ouronscroll.apply(window);
     }
+
+    function trackRecClick(recommendation)
+    {
+        ssas_click(sannsynService, sannsynTrackedId, recommendation);
+    }
 ";
 
             sb.Append(script);
@@ -66,7 +74,7 @@ namespace Sannsyn.Episerver.Commerce.Tracking
                 }
                 string recName = "rec_" + group.Key;
                 string exposures = string.Format("var {0} = ['{1}'];", recName, string.Join("', '", productCodes));
-                string call = string.Format("trackRecommendationExposure({0}, '{1}', '{2}', '{3}');", recName, group.Key, config.Service, customerService.GetCurrentUserId());
+                string call = string.Format("trackRecommendationExposure({0}, '{1}');", recName, group.Key);
                 sb.AppendLine(exposures);
                 sb.AppendLine(call);
             }
