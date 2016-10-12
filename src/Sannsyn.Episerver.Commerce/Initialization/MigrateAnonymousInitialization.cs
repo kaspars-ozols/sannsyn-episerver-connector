@@ -55,7 +55,14 @@ namespace Sannsyn.Episerver.Commerce.Initialization
         private void OnMigrateAnonymous(object sender, ProfileMigrateEventArgs args)
         {
             string newId = _customerService.GetCurrentUserId();
-            _customerService.MigrateUser(args.AnonymousID, newId);
+            try
+            {
+                _customerService.MigrateUser(args.AnonymousID, newId);
+            }
+            catch (Exception e)
+            {
+                _log.Error("Cannot migrate Sannsyn user", e);
+            }
             _log.Debug("Migrating from: {0} to: {1}", args.AnonymousID, newId);
         }
 

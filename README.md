@@ -38,6 +38,20 @@ Add the connection string to the `<connectionStrings>` section in web.config alo
 	...
 </connectionStrings>
 ```
+
+### Additional Settings
+The following appSettings are supported:
+```xml
+<appSettings>
+    <!-- Disables the module. Useful if you need to disable it without uninstalling it. Default: False -->
+    <add name="Sannsyn:DisableModule" value="False" /> 
+    <!-- Adds data sent and recevied from the Sannsyn service to the log file. Very useful for troubleshooting. Default: False -->
+    <add name="Sannsyn:LogSendData" value="False" /> 
+    <!-- The script timeout used for Javascript tracking -->
+    <add name="Sannsyn:ScriptTimeout" value="1500" />
+</appSettings>    
+```
+
 # Getting Started
  1. Install the module from the package manager console: `Install-Package sannsyn.episerver.commerce`
  1. Configure the connection string as shown above. Please note that HTTPS is required to access the Sannsyn servers.

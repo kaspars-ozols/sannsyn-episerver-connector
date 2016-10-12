@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Net.Http;
+using System.Net.Http.Headers;
 using System.Text;
 using EPiServer.Logging;
 using Newtonsoft.Json;
@@ -12,11 +13,17 @@ namespace Sannsyn.Episerver.Commerce.Backend
         private const string API_VERSION = "/recapi/1.0/";
         private readonly ILogger _log;
         private readonly SannsynConfiguration _configuration;
+        private static string _version = null;
 
         public BackendService(ILogger log, SannsynConfiguration configuration)
         {
             _log = log;
             _configuration = configuration;
+
+            if(string.IsNullOrEmpty(_version))
+            {
+                _version = this.GetType().Assembly.GetName().Version.ToString();
+            }
         }
 
         public HttpClient GetConfiguredClient()
@@ -28,6 +35,11 @@ namespace Sannsyn.Episerver.Commerce.Backend
             client.DefaultRequestHeaders.Authorization = new System.Net.Http.Headers.AuthenticationHeaderValue("Basic",
                 Convert.ToBase64String(cred));
 
+            if (string.IsNullOrEmpty(_version) == false)
+            {
+                client.DefaultRequestHeaders.UserAgent.Clear();
+                client.DefaultRequestHeaders.UserAgent.Add(new ProductInfoHeaderValue("EpiserverCommerceConnector", _version));
+            }
             return client;
         }
 
