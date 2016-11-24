@@ -252,6 +252,8 @@
     <Compile Include="Admin\SannsynAdminController.cs" />
     <Compile Include="Admin\SannsynOverviewController.cs" />
     <Compile Include="Backend\BackendService.cs" />
+    <Compile Include="ClientScriptRegistration\ClientScriptFactory.cs" />
+    <Compile Include="ClientScriptRegistration\IClientScriptFactory.cs" />
     <Compile Include="Tracking\ExposedRecommendationsScript.cs" />
     <Compile Include="Constants.cs" />
     <Compile Include="Extensions\LineItemExtensions.cs" />
