@@ -1,8 +1,10 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using Sannsyn.Episerver.Commerce.Models;
 
 namespace Sannsyn.Episerver.Commerce.Services
 {
+    [Obsolete("Use the ITrackedRecommendationService instead")]
     public interface IRecommendationService
     {
         IEnumerable<string> GetRecommendationsForCustomer(string customerId, int maxCount = 10);

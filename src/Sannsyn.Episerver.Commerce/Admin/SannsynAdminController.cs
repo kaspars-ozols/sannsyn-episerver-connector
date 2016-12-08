@@ -23,17 +23,14 @@ namespace Sannsyn.Episerver.Commerce.Admin
         private readonly ISannsynCatalogIndexService _sannsynCatalogIndexService;
         private readonly ISannsynOrderIndexerService _sannsynOrderIndexerService;
         private readonly ISannsynAdminService _sannsynAdminService;
-        private readonly IRecommendationService _recommendationService;
 
         public SannsynAdminController(ISannsynCatalogIndexService sannsynCatalogIndexService,
             ISannsynOrderIndexerService sannsynOrderIndexerService,
-            ISannsynAdminService sannsynAdminService,
-            IRecommendationService recommendationService)
+            ISannsynAdminService sannsynAdminService)
         {
             _sannsynCatalogIndexService = sannsynCatalogIndexService;
             _sannsynOrderIndexerService = sannsynOrderIndexerService;
             _sannsynAdminService = sannsynAdminService;
-            _recommendationService = recommendationService;
         }
 
 

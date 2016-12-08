@@ -13,11 +13,11 @@ namespace Sannsyn.Episerver.Commerce.Admin
 {
     public class SannsynOverviewController : Controller
     {
-        private readonly RecommendationService _recommendationService;
+        private readonly ITrackedRecommendationService _recommendationService;
         private readonly ICustomerService _customerService;
         private readonly ISannsynAdminService _sannsynAdminService;
 
-        public SannsynOverviewController(RecommendationService recommendationService, ICustomerService currentCustomerService,
+        public SannsynOverviewController(ITrackedRecommendationService recommendationService, ICustomerService currentCustomerService,
             ISannsynAdminService sannsynAdminService)
         {
             _recommendationService = recommendationService;

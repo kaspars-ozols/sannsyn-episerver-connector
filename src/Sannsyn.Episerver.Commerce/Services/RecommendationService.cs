@@ -10,6 +10,8 @@ using Sannsyn.Episerver.Commerce.Models;
 
 namespace Sannsyn.Episerver.Commerce.Services
 {
+#pragma warning disable CS0618
+
     [ServiceConfiguration(typeof(IRecommendationService))]
     [ServiceConfiguration(typeof(ITrackedRecommendationService))]
     public class RecommendationService : IRecommendationService, ITrackedRecommendationService
@@ -29,6 +31,7 @@ namespace Sannsyn.Episerver.Commerce.Services
         /// <param name="customerId">Customer id to get Recommendations for</param>
         /// <param name="maxCount">Number of recommendations to return</param>
         /// <returns>A list of entry codes</returns>
+        [Obsolete("Use the ITrackedRecommendationService instead")]
         public IEnumerable<string> GetRecommendationsForCustomer(string customerId, int maxCount = 10)
         {
             string recommender = Constants.Recommenders.UserItemClickBuy;
@@ -53,6 +56,7 @@ namespace Sannsyn.Episerver.Commerce.Services
         /// <param name="productCode">Product code to get recommendations for</param>
         /// <param name="maxCount">Number of recommendations to return</param>
         /// <returns>A list of entry codes</returns>
+        [Obsolete("Use the ITrackedRecommendationService instead")]
         public IEnumerable<string> GetRecommendationsForProduct(string productCode, int maxCount = 10)
         {
             string recommender = Constants.Recommenders.ItemItemClickBuy;
@@ -77,6 +81,7 @@ namespace Sannsyn.Episerver.Commerce.Services
         /// <param name="productCodes">The products to get recommendations for</param>
         /// <param name="maxCount">Number of recommendations to return</param>
         /// <returns>A list of entry codes</returns>
+        [Obsolete("Use the ITrackedRecommendationService instead")]
         public IEnumerable<string> GetRecommendationsForCart(string customerId, IEnumerable<string> productCodes, int maxCount = 10)
         {
             return MipRecommend(customerId, productCodes, maxCount, Constants.Recommenders.CartItemsRecommender);
@@ -89,6 +94,7 @@ namespace Sannsyn.Episerver.Commerce.Services
             return recommendations;
         }
 
+        [Obsolete("Use the ITrackedRecommendationService instead")]
         public IEnumerable<string> GetRecommendationsForCustomerByCategory(string customerId,List<string> categories, int maxCount = 10)
         {
             return MipRecommend(customerId, categories, maxCount, Constants.Recommenders.UserItemCategoryClickBuy);
@@ -142,4 +148,5 @@ namespace Sannsyn.Episerver.Commerce.Services
 
 
     }
+    #pragma warning restore CS0618
 }
