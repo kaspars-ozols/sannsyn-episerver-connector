@@ -34,19 +34,22 @@ namespace Sannsyn.Episerver.Commerce.ClientScriptRegistration
                 PageRouteHelper instance = ServiceLocator.Current.GetInstance<PageRouteHelper>();
                 if (instance.Content != null)
                 {
+                    // The user we're tracking
+                    var userId = EPiServer.Security.PrincipalInfo.CurrentPrincipal.GetContactId();
+
                     // This is the main Sannsyn Recommendation script, it should go on all pages
-                    requiredResources.RequireScriptInline(GenerateCrecScript(), CrecScriptName, null).AtHeader();
+                    requiredResources.RequireScriptInline(GenerateCrecScript(userId), CrecScriptName, null).AtHeader();
 
                     // Register product view only for product / variant content
                     if (instance.Content is EntryContentBase)
                     {
-                        requiredResources.RequireScript(GetProductViewTrackingScript(instance.Content));
+                        requiredResources.RequireScript(GetProductViewTrackingScript(instance.Content, userId));
                     }
                 }
             }
         }
 
-        protected string GetProductViewTrackingScript(IContent content)
+        protected string GetProductViewTrackingScript(IContent content, Guid userId)
         {
             if (content == null) throw new ArgumentNullException("content");
             EntryContentBase entry = content as EntryContentBase;
@@ -62,8 +65,6 @@ namespace Sannsyn.Episerver.Commerce.ClientScriptRegistration
                     entry = productContent;
                 }
             }
-
-            var userId = EPiServer.Security.PrincipalInfo.CurrentPrincipal.GetContactId();
 
             string productCode = entry.Code;
             List<string> parentCategories = entry.GetParentCategoryCodes(entry.Language.Name);
@@ -113,13 +114,13 @@ namespace Sannsyn.Episerver.Commerce.ClientScriptRegistration
         /// Generates the recognition script that will load the main script async from the Sannsyn servers
         /// It also sets up a timeout to prevent the script from causing delays on the site.
         /// </summary>
-        protected string GenerateCrecScript()
+        protected string GenerateCrecScript(Guid userId)
         {
             string script = @"
     var crecReq = new XMLHttpRequest();
     crecReq.withCredentials = true;
     crecReq.timeout = " + _configuration.ScriptTimeout + @"; // Timeout set in milliseconds
-    crecReq.open('GET', '" + _configuration.ServiceUrl + @"jsrecapi/1.0/crec');
+    crecReq.open('GET', '" + _configuration.ServiceUrl + @"jsrecapi/1.0/crec?service=" + _configuration.Service + "&euid=" + userId.ToString() + @"');
     crecReq.setRequestHeader('x-ssasid', localStorage.ssasid);
     crecReq.onreadystatechange = function() 
     {
@@ -128,10 +129,10 @@ namespace Sannsyn.Episerver.Commerce.ClientScriptRegistration
             if (crecReq.status == 200 || crecReq.status == 304)
             {
                 var script = document.createElement('SCRIPT');
+                script.type = 'text/javascript';
                 var innerText = document.createTextNode(crecReq.responseText);
                 script.appendChild(innerText);
                 document.head.appendChild(script);
-                set_ssas_host('" + _configuration.ServiceUrl.Host + @"');
             }
         }
     }
