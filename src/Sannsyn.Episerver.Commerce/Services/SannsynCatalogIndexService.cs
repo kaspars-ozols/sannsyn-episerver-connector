@@ -110,7 +110,7 @@ namespace Sannsyn.Episerver.Commerce.Services
             return localizations;
         }
 
-        protected IEnumerable<EntryContentBase> GetEntriesToIndex(int bulkSize, IEnumerable<ContentReference> contentLinks, CultureInfo culture, int skipCount)
+        protected virtual IEnumerable<EntryContentBase> GetEntriesToIndex(int bulkSize, IEnumerable<ContentReference> contentLinks, CultureInfo culture, int skipCount)
         {
             var items = _contentLoader.GetItems(contentLinks.Skip(skipCount).Take(bulkSize),
                 new LanguageSelector(culture.Name));
@@ -120,7 +120,7 @@ namespace Sannsyn.Episerver.Commerce.Services
             return entriesToIndex;
         }
 
-        protected List<SannsynUpdateEntityModel> GetUpdateModels(Dictionary<string, EntryContentBase> indexableContentItems)
+        protected virtual List<SannsynUpdateEntityModel> GetUpdateModels(Dictionary<string, EntryContentBase> indexableContentItems)
         {
             List<SannsynUpdateEntityModel> sannsynObjects = new List<SannsynUpdateEntityModel>();
             foreach (var indexableContentItem in indexableContentItems)
@@ -137,7 +137,7 @@ namespace Sannsyn.Episerver.Commerce.Services
             return sannsynObjects;
         }
 
-        protected Dictionary<string, EntryContentBase> GetIndexableContentItems(IEnumerable<EntryContentBase> products)
+        protected virtual Dictionary<string, EntryContentBase> GetIndexableContentItems(IEnumerable<EntryContentBase> products)
         {
             Dictionary<string, EntryContentBase> indexableContentItems = new Dictionary<string, EntryContentBase>();
             foreach (var product in products)
@@ -160,7 +160,7 @@ namespace Sannsyn.Episerver.Commerce.Services
             return indexableContentItems;
         }
 
-        protected ContentReference GetCatalogRoot()
+        protected virtual ContentReference GetCatalogRoot()
         {
             var ids = GetCatalogIds().ToList();
             if (ids.Any())
@@ -171,7 +171,7 @@ namespace Sannsyn.Episerver.Commerce.Services
             return ContentReference.EmptyReference;
         }
 
-        protected List<ContentReference> GetCatalogRoots()
+        protected virtual List<ContentReference> GetCatalogRoots()
         {
             List<ContentReference> catalogLinks = new List<ContentReference>();
             var ids = GetCatalogIds().ToList();
