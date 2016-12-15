@@ -49,7 +49,7 @@ namespace Sannsyn.Episerver.Commerce.ClientScriptRegistration
             }
         }
 
-        protected string GetProductViewTrackingScript(IContent content, Guid userId)
+        protected virtual string GetProductViewTrackingScript(IContent content, Guid userId)
         {
             if (content == null) throw new ArgumentNullException("content");
             EntryContentBase entry = content as EntryContentBase;
@@ -82,7 +82,7 @@ namespace Sannsyn.Episerver.Commerce.ClientScriptRegistration
         /// </remarks>
         /// <param name="entry"></param>
         /// <returns></returns>
-        protected IEnumerable<ProductContent> GetParentProductsForVariation(VariationContent entry)
+        protected virtual IEnumerable<ProductContent> GetParentProductsForVariation(VariationContent entry)
         {
             if (entry == null) throw new ArgumentNullException("entry");
 
@@ -93,7 +93,7 @@ namespace Sannsyn.Episerver.Commerce.ClientScriptRegistration
             return products;
         }
 
-        protected string GenerateClickUrl(Guid userId, string productCode, List<string> parentCategories)
+        protected virtual string GenerateClickUrl(Guid userId, string productCode, List<string> parentCategories)
         {
             SannsynConfiguration config = ServiceLocator.Current.GetInstance<SannsynConfiguration>();
 
@@ -114,7 +114,7 @@ namespace Sannsyn.Episerver.Commerce.ClientScriptRegistration
         /// Generates the recognition script that will load the main script async from the Sannsyn servers
         /// It also sets up a timeout to prevent the script from causing delays on the site.
         /// </summary>
-        protected string GenerateCrecScript(Guid userId)
+        protected virtual string GenerateCrecScript(Guid userId)
         {
             string script = @"
     var crecReq = new XMLHttpRequest();
