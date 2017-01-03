@@ -31,7 +31,7 @@ namespace Sannsyn.Episerver.Commerce.ClientScriptRegistration
         {
             if (_configuration.ModuleEnabled)
             {
-                PageRouteHelper instance = ServiceLocator.Current.GetInstance<PageRouteHelper>();
+                var instance = ServiceLocator.Current.GetInstance<IPageRouteHelper>();
                 if (instance.Content != null)
                 {
                     // The user we're tracking
