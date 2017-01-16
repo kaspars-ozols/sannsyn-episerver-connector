@@ -10,7 +10,7 @@ using System.Runtime.InteropServices;
 [assembly: AssemblyConfiguration("")]
 [assembly: AssemblyCompany("Sannsyn AS")]
 [assembly: AssemblyProduct("Sannsyn Recommender")]
-[assembly: AssemblyCopyright("Copyright © Sannsyn AS 2016")]
+[assembly: AssemblyCopyright("Copyright © Sannsyn AS 2017")]
 [assembly: AssemblyTrademark("")]
 [assembly: AssemblyCulture("")]
 
@@ -22,5 +22,5 @@ using System.Runtime.InteropServices;
 // The following GUID is for the ID of the typelib if this project is exposed to COM
 [assembly: Guid("4bf3d566-bbc6-495a-957b-2e9cfa46c7bb")]
 
-[assembly: AssemblyVersion("2.0.1.0")]
-[assembly: AssemblyFileVersion("2.0.1.0")]
+[assembly: AssemblyVersion("2.2.0.0")]
+[assembly: AssemblyFileVersion("2.2.0.0")]
