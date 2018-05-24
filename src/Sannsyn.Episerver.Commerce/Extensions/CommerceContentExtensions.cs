@@ -12,7 +12,7 @@ namespace Sannsyn.Episerver.Commerce.Extensions
 {
     public static class CommerceContentExtensions
     {
-        static readonly ILinksRepository linksRepository = ServiceLocator.Current.GetInstance<ILinksRepository>();
+        static readonly IRelationRepository relationRepository = ServiceLocator.Current.GetInstance<IRelationRepository>();
         static readonly IContentLoader contentLoader = ServiceLocator.Current.GetInstance<IContentLoader>();
         static readonly ReferenceConverter referenceConverter = ServiceLocator.Current.GetInstance<ReferenceConverter>();
 
@@ -50,7 +50,7 @@ namespace Sannsyn.Episerver.Commerce.Extensions
         public static List<CatalogContentBase> GetProductCategories(this CatalogContentBase productContent, string language)
         {
 
-            var allRelations = linksRepository.GetRelationsBySource(productContent.ContentLink);
+            var allRelations = relationRepository.GetRelationsBySource(productContent.ContentLink);
             var categories = allRelations.OfType<NodeRelation>().ToList();
             List<CatalogContentBase> parentCategories = new List<CatalogContentBase>();
             if (categories.Any())
@@ -96,7 +96,7 @@ namespace Sannsyn.Episerver.Commerce.Extensions
         {
             if (content != null)
             {
-                IEnumerable<Relation> parentRelations = linksRepository.GetRelationsByTarget(content.ContentLink);
+                IEnumerable<Relation> parentRelations = relationRepository.GetRelationsByTarget(content.ContentLink);
                 if (parentRelations.Any())
                 {
                     Relation firstRelation = parentRelations.FirstOrDefault();
