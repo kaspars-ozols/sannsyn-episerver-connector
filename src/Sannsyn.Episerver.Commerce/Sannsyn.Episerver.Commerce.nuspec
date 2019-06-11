@@ -11,7 +11,7 @@
         <summary></summary>
 
         <dependencies>
-            <dependency id="EPiServer.Commerce.Core" version="[10.0, 11.0)"  />
+            <dependency id="EPiServer.Commerce.Core" version="[13.0, 14.0)"  />
         </dependencies>
     </metadata>
     <files>
