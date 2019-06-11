@@ -1,5 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Linq;
 using EPiServer;
 using EPiServer.Commerce.Catalog.ContentTypes;
@@ -50,7 +49,7 @@ namespace Sannsyn.Episerver.Commerce.Extensions
         public static List<CatalogContentBase> GetProductCategories(this CatalogContentBase productContent, string language)
         {
 
-            var allRelations = relationRepository.GetRelationsBySource(productContent.ContentLink);
+            var allRelations = relationRepository.GetParents<Relation>(productContent.ContentLink);
             var categories = allRelations.OfType<NodeRelation>().ToList();
             List<CatalogContentBase> parentCategories = new List<CatalogContentBase>();
             if (categories.Any())
@@ -58,10 +57,10 @@ namespace Sannsyn.Episerver.Commerce.Extensions
                 // Add all categories (nodes) that this product is part of
                 foreach (var nodeRelation in categories)
                 {
-                    if (nodeRelation.Target != referenceConverter.GetRootLink())
+                    if (nodeRelation.Parent != referenceConverter.GetRootLink())
                     {
                         CatalogContentBase parentCategory =
-                            contentLoader.Get<CatalogContentBase>(nodeRelation.Target,
+                            contentLoader.Get<CatalogContentBase>(nodeRelation.Parent,
                                 new LanguageSelector(language));
                         if (parentCategory != null && parentCategory.ContentType != CatalogContentType.Catalog)
                         {
@@ -96,13 +95,13 @@ namespace Sannsyn.Episerver.Commerce.Extensions
         {
             if (content != null)
             {
-                IEnumerable<Relation> parentRelations = relationRepository.GetRelationsByTarget(content.ContentLink);
+                var parentRelations = relationRepository.GetParents<EntryRelation>(content.ContentLink).ToList();
                 if (parentRelations.Any())
                 {
                     Relation firstRelation = parentRelations.FirstOrDefault();
                     if (firstRelation != null)
                     {
-                        var ParentProductContent = contentLoader.Get<EntryContentBase>(firstRelation.Source);
+                        var ParentProductContent = contentLoader.Get<EntryContentBase>(firstRelation.Parent);
                         return ParentProductContent;
                     }
                 }
